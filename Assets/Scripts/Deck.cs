@@ -10,6 +10,7 @@ public class Deck : MonoBehaviour {
     private int topCard = -1;
     public SpriteAtlas cardFronts;
     public GameObject playedCardPrefab;
+    public DeckInfo deckInfo;
     //public Sprite cardFronts;
         // Use this for initialization
     void Start()
@@ -22,31 +23,12 @@ public class Deck : MonoBehaviour {
 
     }
 
-    string textureNameForCard(CardType card)
-    {
-        switch (card)
-        {
-            case CardType.Chopsticks: return "Chopsticks";
-            case CardType.Roll_Single: return "RollSingle";
-            case CardType.Roll_Double: return "RollDouble";
-            case CardType.Roll_Triple: return "RollTriple";
-            case CardType.Dumpling: return "Dumpling";
-            case CardType.Nigiri_Squid: return "NigiriSquid";
-            case CardType.Nigiri_Salmon: return "NigiriSalmon";
-            case CardType.Nigiri_Egg: return "NigiriEgg";
-            case CardType.Wasabi: return "Wasabi";
-            case CardType.Sashimi: return "Sashimi";
-            case CardType.Tempura: return "Tempura";
-            case CardType.Pudding: return "Pudding";
-            default: return "";
-        }
-    }
 
     public Texture2D textureForCard(CardType card)
     {
         if (!cardTextures.ContainsKey(card))
         {
-            Sprite sprite = cardFronts.GetSprite(textureNameForCard(card));
+            Sprite sprite = deckInfo.byType(card).cardSprite;
             Texture2D cardTexture = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
             var pixels = sprite.texture.GetPixels((int)sprite.textureRect.x, (int)sprite.textureRect.y, (int)sprite.textureRect.width, (int)sprite.textureRect.height);
             cardTexture.SetPixels(pixels);
@@ -117,38 +99,18 @@ public class Deck : MonoBehaviour {
 	
     void Populate()
     {
-        drawPile = new CardType[108];
-        for (int i = 0; i < 14; i++)
+        //First count the number of cards
+        int count = 0;
+        foreach (CardInfo cardInfo in deckInfo.cards)
         {
-            drawPile[++topCard] = CardType.Tempura;
-            drawPile[++topCard] = CardType.Sashimi;
-            drawPile[++topCard] = CardType.Dumpling;
-            if (i < 12)
+            count += cardInfo.copiesInDeck;
+        }
+        drawPile = new CardType[count];
+        foreach (CardInfo cardinfo in deckInfo.cards)
+        {
+            for(int i=0;i<cardinfo.copiesInDeck;i++)
             {
-                drawPile[++topCard] = CardType.Roll_Double;
-            }
-            if (i < 10)
-            {
-                drawPile[++topCard] = CardType.Nigiri_Salmon;
-                drawPile[++topCard] = CardType.Pudding;
-            }
-            if (i < 8)
-            {
-                drawPile[++topCard] = CardType.Roll_Triple;
-            }
-            if (i < 6)
-            {
-                drawPile[++topCard] = CardType.Wasabi;
-                drawPile[++topCard] = CardType.Roll_Single;
-            }
-            if (i < 5)
-            {
-                drawPile[++topCard] = CardType.Nigiri_Egg;
-                drawPile[++topCard] = CardType.Nigiri_Squid;
-            }
-            if (i < 4)
-            {
-                drawPile[++topCard] = CardType.Chopsticks;
+                drawPile[++topCard] = cardinfo.type;
             }
         }
         Shuffle();

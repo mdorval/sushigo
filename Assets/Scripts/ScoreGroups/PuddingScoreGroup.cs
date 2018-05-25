@@ -4,19 +4,13 @@ using UnityEngine;
 
 public class PuddingScoreGroup: ScoreGroup {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     public override bool CanPlayOnGroup(CardType card)
     {
         return card == CardType.Pudding;
     }
 
+    public override void CardPlayedOnGroup(CardType card, ScoreCard scoreCard)
+    {
+        scoreCard.addToPuddings(1);
+    }
 }

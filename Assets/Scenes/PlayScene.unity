@@ -164,7 +164,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   passedCards: 
+  textColor: {r: 1, g: 0, b: 0, a: 0}
+  playerName: Player
+  cardToPlay: 0
   score: 0
+  sushiRolls: 0
+  puddings: 0
   playerIndex: 0
   hand: {fileID: 960751018}
 --- !u!1 &144822095
@@ -211,11 +216,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a54fdabafe1288747809e039d7074ae9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardFronts: {fileID: 4343727234628468602, guid: f4f960aa76569f0428d0e93cd39d4195,
-    type: 2}
   playedCardPrefab: {fileID: 1030493031081116, guid: 1524ae8b75df7394ab024d760fbeee2c,
     type: 2}
   deckInfo: {fileID: 11400000, guid: 59687c47346ebd24eb328d3abd26d31c, type: 2}
+  scoreText: {fileID: 975892324}
 --- !u!1 &170076733
 GameObject:
   m_ObjectHideFlags: 0
@@ -395,7 +399,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   passedCards: 
+  textColor: {r: 0.04280901, g: 1, b: 0, a: 0}
+  playerName: Wash
+  cardToPlay: 0
   score: 0
+  sushiRolls: 0
+  puddings: 0
   playerIndex: 1
 --- !u!1001 &512285668
 Prefab:
@@ -519,6 +528,68 @@ Prefab:
     - {fileID: 0}
   m_ParentPrefab: {fileID: 100100000, guid: dbe4339428473d04384d6fc9f21fd36d, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &789136498
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 789136501}
+  - component: {fileID: 789136500}
+  - component: {fileID: 789136499}
+  m_Layer: 0
+  m_Name: EventSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &789136499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 789136498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1077351063, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalAxis: Horizontal
+  m_VerticalAxis: Vertical
+  m_SubmitButton: Submit
+  m_CancelButton: Cancel
+  m_InputActionsPerSecond: 10
+  m_RepeatDelay: 0.5
+  m_ForceModuleActive: 0
+--- !u!114 &789136500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 789136498}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -619905303, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_FirstSelected: {fileID: 0}
+  m_sendNavigationEvents: 1
+  m_DragThreshold: 10
+--- !u!4 &789136501
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 789136498}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &960751018
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,6 +631,114 @@ Transform:
   m_PrefabParentObject: {fileID: 4941769228251646, guid: dbe4339428473d04384d6fc9f21fd36d,
     type: 2}
   m_PrefabInternal: {fileID: 1684238333}
+--- !u!1 &975892322
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 975892323}
+  - component: {fileID: 975892325}
+  - component: {fileID: 975892324}
+  m_Layer: 5
+  m_Name: ScoreText
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &975892323
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 975892322}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1669470272}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 83.4, y: 155.9}
+  m_SizeDelta: {x: 160, y: 310}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &975892324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 975892322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_FontData:
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
+    m_FontSize: 14
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 10
+    m_MaxSize: 40
+    m_Alignment: 0
+    m_AlignByGeometry: 1
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: 'Score
+
+    <color=''#FF00BA''>Mal: 0</color>
+
+    <color=''#FF0000''>Player: 0</color>
+
+    <color=''#000CFF''>River: 0</color>
+
+    <color=''#0BFF00''>Wash: 0</color>
+
+
+
+    Rolls
+
+    <color=''#FF00BA''>Mal: 0</color>
+
+    <color=''#FF0000''>Player: 0</color>
+
+    <color=''#000CFF''>River: 0</color>
+
+    <color=''#0BFF00''>Wash: 0</color>
+
+
+
+    Puddings
+
+    <color=''#FF00BA''>Mal: 0</color>
+
+    <color=''#FF0000''>Player: 0</color>
+
+    <color=''#000CFF''>River: 0</color>
+
+    <color=''#0BFF00''>Wash: 0</color>
+
+'
+--- !u!222 &975892325
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 975892322}
 --- !u!1 &1147168726
 GameObject:
   m_ObjectHideFlags: 0
@@ -601,7 +780,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   passedCards: 
+  textColor: {r: 1, g: 0, b: 0.7285099, a: 0}
+  playerName: Mal
+  cardToPlay: 0
   score: 0
+  sushiRolls: 0
+  puddings: 0
   playerIndex: 3
 --- !u!4 &1207773821 stripped
 Transform:
@@ -763,6 +947,100 @@ Transform:
   m_PrefabParentObject: {fileID: 4941769228251646, guid: dbe4339428473d04384d6fc9f21fd36d,
     type: 2}
   m_PrefabInternal: {fileID: 2104411487}
+--- !u!1 &1669470268
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1669470272}
+  - component: {fileID: 1669470271}
+  - component: {fileID: 1669470270}
+  - component: {fileID: 1669470269}
+  m_Layer: 5
+  m_Name: Canvas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1669470269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1669470268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1301386320, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+--- !u!114 &1669470270
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1669470268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 0
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 800, y: 600}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+--- !u!223 &1669470271
+Canvas:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1669470268}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_RenderMode: 0
+  m_Camera: {fileID: 282840813}
+  m_PlaneDistance: 100
+  m_PixelPerfect: 0
+  m_ReceivesEvents: 1
+  m_OverrideSorting: 0
+  m_OverridePixelPerfect: 0
+  m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 0
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_TargetDisplay: 0
+--- !u!224 &1669470272
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1669470268}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 0}
+  m_Children:
+  - {fileID: 975892323}
+  m_Father: {fileID: 0}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!1001 &1684238333
 Prefab:
   m_ObjectHideFlags: 0
@@ -942,7 +1220,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   passedCards: 
+  textColor: {r: 0, g: 0.048597574, b: 1, a: 0}
+  playerName: River
+  cardToPlay: 0
   score: 0
+  sushiRolls: 0
+  puddings: 0
   playerIndex: 2
 --- !u!4 &1925074407 stripped
 Transform:

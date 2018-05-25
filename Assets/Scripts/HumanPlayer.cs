@@ -6,18 +6,6 @@ public class HumanPlayer : Player
 {
     List<PlayedCard> playedCards;
     public GameObject hand;
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public override void dealHand(List<CardType> dealthand)
     {
         handCards = dealthand;
@@ -26,20 +14,19 @@ public class HumanPlayer : Player
         {
             if (n < handCards.Count)
             {
-                card.gameObject.SetActive(true);
+                card.GetComponent<Renderer>().enabled = true;
                 card.ApplyCard(handCards[n], GetComponentInParent<Deck>().textureForCard(handCards[n]), this);
             }
             else
             {
-                card.gameObject.SetActive(false);
+                card.GetComponent<Renderer>().enabled = false;
             }
             n++;
         }
     }
     public void PlayCard(CardType card)
     {
-        AddCardToPlayArea(card);
-        handCards.Remove(card);
+        pickCardToPlay(card);
         GetComponentInParent<Deck>().StartNextTurn();
     }
 }

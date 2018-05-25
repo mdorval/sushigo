@@ -8,7 +8,8 @@ public abstract class ScoreGroup: MonoBehaviour {
     protected Vector3 positionOfNextCard = new Vector3(0f, 0f, 0f);
     private static Vector3 nextCardDelta = new Vector3(0, 0.1f, -0.5f);
     public abstract bool CanPlayOnGroup(CardType card);
-    public void AddCard(CardType card)
+    public abstract void CardPlayedOnGroup(CardType card,ScoreCard scoreCard);
+    public void AddCard(CardType card,ScoreCard scoreCard)
     {
         //Note that a card can be added here that fails CanPlayOnGroup
         //The first card is vetted by Player.createNewScoreGroupForCard
@@ -20,5 +21,11 @@ public abstract class ScoreGroup: MonoBehaviour {
         PlayedCard mycard = mygameobject.GetComponent<PlayedCard>();
         mycard.ApplyCard(card, GetComponentInParent<Deck>().textureForCard(card));
         cards.Add(card);
+        CardPlayedOnGroup(card, scoreCard);
+    }
+
+    void OnDestroy()
+    {
+        Destroy(gameObject);
     }
 }

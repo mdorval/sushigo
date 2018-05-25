@@ -6,15 +6,40 @@ public abstract class Player : MonoBehaviour {
 
     protected List<CardType> handCards;
     public List<CardType> passedCards;
+    public ScoreCard scoreCard;
+    public Color textColor;
+    public string playerName;
+    public CardType cardToPlay = CardType.Null;
 
     public int score = 0;
+    public int sushiRolls = 0; //converted to score at end of round
+    public int puddings = 0; //converted to score at end of game
     public int playerIndex = 0;
+
+    public void Start()
+    {
+        scoreCard = new ScoreCard(playerName, textColor);
+        GetComponentInParent<Deck>().AddScoreCard(scoreCard);
+    }
 
     public abstract void dealHand(List<CardType> dealthand);
 
-    public virtual void passHand()
+    public bool PassHand()
     {
         passedCards = handCards;
+        return passedCards.Count > 0;
+    }
+    
+    public void pickCardToPlay(CardType card)
+    {
+        handCards.Remove(card);
+        cardToPlay = card;
+    }
+
+    public void playCard()
+    {
+        AddCardToPlayArea(cardToPlay);
+        cardToPlay = CardType.Null;
     }
 
     public void AddCardToPlayArea(CardType card)
@@ -25,7 +50,7 @@ public abstract class Player : MonoBehaviour {
         {
             if (group.CanPlayOnGroup(card))
             {
-                group.AddCard(card);
+                group.AddCard(card,scoreCard);
                 return;
             }
             else
@@ -34,7 +59,6 @@ public abstract class Player : MonoBehaviour {
             }
         }
         createNewScoreGroupForCard(card, position);
-        //new scoregroup = 
     }
 
     void createNewScoreGroupForCard(CardType card,Vector3 localPosition)
@@ -74,7 +98,7 @@ public abstract class Player : MonoBehaviour {
                 gameobj.AddComponent<GenericScoreGroup>();
                 break;
         }
-        gameobj.GetComponent<ScoreGroup>().AddCard(card);
+        gameobj.GetComponent<ScoreGroup>().AddCard(card,scoreCard);
     }
 
 }

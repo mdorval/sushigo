@@ -4,16 +4,6 @@ using UnityEngine;
 
 public class NigiriScoreGroup : ScoreGroup {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     public override bool CanPlayOnGroup(CardType card)
     {
         //Don't stack nigiri - nigiri should be layed down side by side
@@ -21,4 +11,19 @@ public class NigiriScoreGroup : ScoreGroup {
         return false;
     }
 
+    public override void CardPlayedOnGroup(CardType card, ScoreCard scoreCard)
+    {
+        switch (card)
+        {
+            case CardType.Nigiri_Egg:
+                scoreCard.addToScore(1);
+                break;
+            case CardType.Nigiri_Salmon:
+                scoreCard.addToScore(2);
+                break;
+            case CardType.Nigiri_Squid:
+                scoreCard.addToScore(3);
+                break;
+        }
+    }
 }

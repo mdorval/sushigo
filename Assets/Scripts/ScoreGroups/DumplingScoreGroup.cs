@@ -4,19 +4,16 @@ using UnityEngine;
 
 public class DumplingScoreGroup : ScoreGroup {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
-
     public override bool CanPlayOnGroup(CardType card)
     {
         return card == CardType.Dumpling;
     }
 
+    public override void CardPlayedOnGroup(CardType card, ScoreCard scoreCard)
+    {
+        if (cards.Count <= 5)
+        {
+            scoreCard.addToScore(cards.Count);
+        }
+    }
 }

@@ -6,22 +6,18 @@ public class HumanPlayer : Player
 {
     List<PlayedCard> playedCards;
     public GameObject hand;
+    public GameObject cardPrefab;
     public override void dealHand(List<CardType> dealthand)
     {
         handCards = dealthand;
-        int n = 0;
         foreach (HandCard card in hand.GetComponentsInChildren<HandCard>())
         {
-            if (n < handCards.Count)
-            {
-                card.GetComponent<Renderer>().enabled = true;
-                card.ApplyCard(handCards[n], GetComponentInParent<Deck>().textureForCard(handCards[n]), this);
-            }
-            else
-            {
-                card.GetComponent<Renderer>().enabled = false;
-            }
-            n++;
+            Destroy(card);
+        }
+        foreach (CardType card in dealthand)
+        {
+            GameObject mycard = Instantiate(cardPrefab,hand.transform);
+            mycard.GetComponent<HandCard>().ApplyCard(card, GetComponentInParent<Deck>().spriteForCard(card), this);
         }
     }
     public void PlayCard(CardType card)

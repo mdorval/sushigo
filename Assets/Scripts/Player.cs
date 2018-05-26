@@ -9,17 +9,21 @@ public abstract class Player : MonoBehaviour {
     public ScoreCard scoreCard;
     public Color textColor;
     public string playerName;
-    public CardType cardToPlay = CardType.Null;
+    protected CardType cardToPlay = CardType.Null;
 
-    public int score = 0;
-    public int sushiRolls = 0; //converted to score at end of round
-    public int puddings = 0; //converted to score at end of game
+    //positioning
+    private Vector3 distanceBetweenScoreGroup;
+
+    private Deck mydeck;
+
     public int playerIndex = 0;
 
     public void Start()
     {
         scoreCard = new ScoreCard(playerName, textColor);
-        GetComponentInParent<Deck>().AddScoreCard(scoreCard);
+        mydeck = GetComponentInParent<Deck>();
+        mydeck.AddScoreCard(scoreCard);
+        distanceBetweenScoreGroup = new Vector3(mydeck.playedCardPrefab.transform.localScale.x + 0.04f, 0, 0);
     }
 
     public abstract void dealHand(List<CardType> dealthand);
@@ -55,7 +59,7 @@ public abstract class Player : MonoBehaviour {
             }
             else
             {
-                position = (new Vector3(group.transform.localPosition.x, 0, 0)) + (new Vector3(1, 0, 0));
+                position = (new Vector3(group.transform.localPosition.x, 0, 0)) + distanceBetweenScoreGroup;
             }
         }
         createNewScoreGroupForCard(card, position);

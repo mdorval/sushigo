@@ -8,13 +8,14 @@ using System.Linq;
 public class Deck : MonoBehaviour {
     private Dictionary<CardType, Texture2D> cardTextures = new Dictionary<CardType,Texture2D>();
     private CardType[] drawPile;
-    private Player[] players;
+    private LinkedList<Player> players = new LinkedList<Player>();
     private ScoreCards scoreCards = new ScoreCards();
     private int topCard = -1;
     private int roundNumber = 1;
     public GameObject playedCardPrefab;
     public DeckInfo deckInfo;
     public Text scoreText;
+    private bool passLeft = false;
     void Start()
     {
         Populate();
@@ -57,6 +58,10 @@ public class Deck : MonoBehaviour {
         }
         scoreText.text = rettext;
     }
+    public Sprite spriteForCard(CardType card)
+    {
+        return deckInfo.byType(card).cardSprite;
+    }
 
     public Texture2D textureForCard(CardType card)
     {
@@ -71,25 +76,24 @@ public class Deck : MonoBehaviour {
         }
         return cardTextures[card];
     }
-    int GetNeighborIndex(int playerIndex)
+    Player GetNeighbor(Player player)
     {
-        if ((playerIndex - 1) >=0)
+        LinkedListNode<Player> node = players.Find(player);
+        if (passLeft)
         {
-            return playerIndex - 1;
+            return (node.Previous != null) ? node.Previous.Value : players.Last.Value;
         }
-        else
+        else //passRight
         {
-            //Wrap around
-            return players.GetLength(0) - 1;
+            return (node.Next != null) ? node.Next.Value : players.First.Value;
         }
     }
     
     void GetPlayers()
     {
-        players = GetComponentsInChildren<Player>();
-        foreach (Player player in players)
+        foreach (Player player in GetComponentsInChildren<Player>())
         {
-            players[player.playerIndex] = player;
+            players.AddLast(player);
             player.dealHand(drawHand(8));
         }
     }
@@ -116,6 +120,7 @@ public class Deck : MonoBehaviour {
             }
         }
         roundNumber++;
+        passLeft = !passLeft;
     }
     public void StartNextTurn()
     {
@@ -134,7 +139,7 @@ public class Deck : MonoBehaviour {
         {
             foreach (Player player in players)
             {
-                players[GetNeighborIndex(player.playerIndex)].dealHand(player.passedCards);
+                GetNeighbor(player).dealHand(player.passedCards);
             }
         }
         else
@@ -144,7 +149,7 @@ public class Deck : MonoBehaviour {
             {
                 foreach (Player player in players)
                 {
-                    players[GetNeighborIndex(player.playerIndex)].dealHand(drawHand(8));
+                    GetNeighbor(player).dealHand(drawHand(8));
                 }
             }
         }

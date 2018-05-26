@@ -6,7 +6,7 @@ public abstract class ScoreGroup: MonoBehaviour {
     protected List<CardType> cards = new List<CardType>();
     protected int score = 0;
     protected Vector3 positionOfNextCard = new Vector3(0f, 0f, 0f);
-    private static Vector3 nextCardDelta = new Vector3(0, 0.1f, -0.5f);
+    private static Vector3 nextCardDelta = new Vector3(0, 0.01f, -0.2f);
     public abstract bool CanPlayOnGroup(CardType card);
     public abstract void CardPlayedOnGroup(CardType card,ScoreCard scoreCard);
     public void AddCard(CardType card,ScoreCard scoreCard)

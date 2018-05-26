@@ -1,12 +1,15 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.U2D;
+using UnityEngine.UI;
 
-public class HandCard : MonoBehaviour {
+public class HandCard : MonoBehaviour, IPointerClickHandler {
     private Animator anim;
     private CardType mycard = CardType.Null;
     private HumanPlayer myplayer;
+    private Deck mydeck;
 	// Use this for initialization
 	void Start () {
         anim = GetComponent<Animator>();
@@ -17,27 +20,21 @@ public class HandCard : MonoBehaviour {
 		
 	}
 
-    public void ApplyCard(CardType card, Texture2D texture, HumanPlayer player)
+    public void ApplyCard(CardType card, Sprite texture, HumanPlayer player)
     {
         myplayer = player;
-        SkinnedMeshRenderer renderer = GetComponent<SkinnedMeshRenderer>();
-        renderer.material.mainTexture = texture;
+        mydeck = player.GetComponentInParent<Deck>();
+        Image image = GetComponent<Image>();
+        image.sprite = texture;
         mycard = card;
     }
 
-    void OnMouseEnter()
+    void OnDestroy()
     {
-        anim.SetBool("isHovering", true);
-        transform.Translate(new Vector3(0, 0, -0.01f));
+        Destroy(gameObject);
     }
 
-    void OnMouseExit()
-    {
-        anim.SetBool("isHovering", false);
-        transform.Translate(new Vector3(0, 0, 0.01f));
-    }
-
-    void OnMouseDown()
+    public void OnPointerClick(PointerEventData eventData)
     {
         myplayer.PlayCard(this.mycard);
     }

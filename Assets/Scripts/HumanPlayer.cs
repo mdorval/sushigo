@@ -7,22 +7,50 @@ public class HumanPlayer : Player
     List<PlayedCard> playedCards;
     public GameObject hand;
     public GameObject cardPrefab;
-    public override void dealHand(List<CardType> dealthand)
+    private List<HandCard> cards = new List<HandCard>();
+    public override void Init()
     {
-        handCards = dealthand;
         foreach (HandCard card in hand.GetComponentsInChildren<HandCard>())
         {
-            Destroy(card);
+            cards.Add(card);
+            card.player = this;
         }
-        foreach (CardType card in dealthand)
+    }
+    public override void dealHand(List<CardType> dealthand)
+    {
+        hand.SetActive(true);
+        handCards = dealthand;
+        //DestroyCards();
+        var myenumerator = dealthand.GetEnumerator();
+        foreach (HandCard card in cards)
         {
-            GameObject mycard = Instantiate(cardPrefab,hand.transform);
-            mycard.GetComponent<HandCard>().ApplyCard(card, GetComponentInParent<Deck>().spriteForCard(card), this);
+            if (myenumerator.MoveNext())
+            {
+                if (!card.gameObject.activeInHierarchy)
+                {
+                    card.gameObject.SetActive(true);
+                }
+                card.ApplyCard(GetComponentInParent<Deck>().deckInfo.byType(myenumerator.Current));
+            }
+            else
+            {
+                card.gameObject.SetActive(false);
+            }
         }
+    }
+    private void DestroyCards()
+    {
+        foreach (HandCard card in hand.GetComponentsInChildren<HandCard>())
+        {
+            card.gameObject.SetActive(false);
+        }
+
     }
     public void PlayCard(CardType card)
     {
         pickCardToPlay(card);
+        //DestroyCards();
+        hand.SetActive(false);
         GetComponentInParent<Deck>().StartNextTurn();
     }
 }

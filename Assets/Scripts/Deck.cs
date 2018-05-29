@@ -15,6 +15,7 @@ public class Deck : MonoBehaviour {
     public GameObject playedCardPrefab;
     public DeckInfo deckInfo;
     public Text scoreText;
+    public ContinueDialog continueDialog;
     private bool passLeft = false;
     void Start()
     {
@@ -100,28 +101,32 @@ public class Deck : MonoBehaviour {
     public void finishRound()
     {
         scoreCards.scoreRolls();
-        if (roundNumber == 3)
+        UpdateText();
+        if (roundNumber < 3)
+        {
+            continueDialog.ShowDialog("Round " + roundNumber + " complete!\n"+scoreCards.SortByScore().First().Name()+" In the lead", "Continue", StartNextRound);
+        }
+        else if (roundNumber == 3)
         {
             scoreCards.scorePuddings();
-        }
-        UpdateText();
-        foreach (Player player in players)
-        {
-            foreach(ScoreGroup group in player.GetComponentsInChildren<ScoreGroup>())
-            {                
-                if (group.GetType() == typeof(PuddingScoreGroup))
-                {
-                    group.transform.localPosition = new Vector3(0, 0, 0);
-                }
-                else
-                {
-                    Destroy(group);
-                }
-            }
+            continueDialog.ShowDialog("Game Complete!\n" + scoreCards.SortByScore().First().Name() + " Wins!","Play Again",Reset,"Exit",Application.Quit);
         }
         roundNumber++;
         passLeft = !passLeft;
     }
+
+    public void Reset()
+    {
+        roundNumber = 1;
+        Populate();
+        foreach (Player player in players)
+        {
+            player.reset();
+            player.dealHand(drawHand(8));
+        }
+        UpdateText();
+    }
+
     public void StartNextTurn()
     {
         foreach (Player player in players)
@@ -145,13 +150,24 @@ public class Deck : MonoBehaviour {
         else
         {
             finishRound();
-            if (roundNumber < 4)
-            {
-                foreach (Player player in players)
-                {
-                    GetNeighbor(player).dealHand(drawHand(8));
-                }
-            }
+        }
+    }
+
+    private void CleanUpRound()
+    {
+        foreach (Player player in players)
+        {
+            player.clearCards(true);
+        }
+
+    }
+
+    public void StartNextRound()
+    {
+        CleanUpRound();
+        foreach (Player player in players)
+        {
+            player.dealHand(drawHand(8));
         }
     }
 
@@ -175,6 +191,7 @@ public class Deck : MonoBehaviour {
     {
         //First count the number of cards
         int count = 0;
+        topCard = -1;
         foreach (CardInfo cardInfo in deckInfo.cards)
         {
             count += cardInfo.copiesInDeck;

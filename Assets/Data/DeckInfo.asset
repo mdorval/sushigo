@@ -15,48 +15,62 @@ MonoBehaviour:
   - type: 1
     copiesInDeck: 6
     cardSprite: {fileID: 21300022, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
-    scoreGroupTypeName: RollScoreGroup
+    tooltipText: 'The most rolls at end of round is worth 6 points.
+
+      The second most rolls is worth 3 points.'
   - type: 2
     copiesInDeck: 12
     cardSprite: {fileID: 21300014, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
-    scoreGroupTypeName: RollScoreGroup
+    tooltipText: 'The most rolls at end of round is worth 6 points.
+
+      The second most rolls is worth 3 points.'
   - type: 3
     copiesInDeck: 8
     cardSprite: {fileID: 21300002, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
-    scoreGroupTypeName: RollScoreGroup
+    tooltipText: 'The most rolls at end of round is worth 6 points.
+
+      The second most rolls is worth 3 points.'
   - type: 4
     copiesInDeck: 14
     cardSprite: {fileID: 21300020, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
-    scoreGroupTypeName: DumplingScoreGroup
+    tooltipText: Each dumping is worth 1 more than the previous dumping played this
+      round, to a maximum of 5
   - type: 5
     copiesInDeck: 5
     cardSprite: {fileID: 21300000, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
-    scoreGroupTypeName: NigiriScoreGroup
+    tooltipText: Worth 3 points
   - type: 6
     copiesInDeck: 10
     cardSprite: {fileID: 21300004, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
-    scoreGroupTypeName: NigiriScoreGroup
+    tooltipText: Worth 2 points
   - type: 7
     copiesInDeck: 5
     cardSprite: {fileID: 21300016, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
-    scoreGroupTypeName: NigiriScoreGroup
+    tooltipText: Worth 1 points
   - type: 8
     copiesInDeck: 6
     cardSprite: {fileID: 21300006, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
-    scoreGroupTypeName: WasabiScoreGroup
+    tooltipText: The next Nigiri you play is worth 3x points
   - type: 9
     copiesInDeck: 14
     cardSprite: {fileID: 21300018, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
-    scoreGroupTypeName: SashimiScoreGroup
+    tooltipText: '3 Sashimi at the end of round is worth 10.
+
+      Fewer Sashimi is worth nothing'
   - type: 10
     copiesInDeck: 14
     cardSprite: {fileID: 21300008, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
-    scoreGroupTypeName: TempuraScoreGroup
+    tooltipText: '3 Tempura at the end of round is worth 10.
+
+      Fewer Tempura is worth nothing'
   - type: 11
     copiesInDeck: 10
     cardSprite: {fileID: 21300012, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
-    scoreGroupTypeName: PuddingScoreGroup
+    tooltipText: 'At end of game, the most Puddings is worth 6 points.
+
+      The least Puddings is worth -6 points'
   - type: 12
     copiesInDeck: 4
     cardSprite: {fileID: 21300010, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
-    scoreGroupTypeName: GenericScoreGroup
+    tooltipText: In a future turn you can trade your chopsticks in for the ability
+      to select two cards from your hand

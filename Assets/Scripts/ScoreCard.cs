@@ -145,6 +145,12 @@ public class ScoreCard
     {
         _rolls = 0;
     }
+    public void clear()
+    {
+        _score = 0;
+        _puddings = 0;
+        _rolls = 0;
+    }
 
     public string Name() { return _userName; }
     public string HtmlColor() { return _htmlColor; }

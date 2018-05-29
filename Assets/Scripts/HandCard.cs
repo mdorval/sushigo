@@ -5,28 +5,28 @@ using UnityEngine.EventSystems;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 
-public class HandCard : MonoBehaviour, IPointerClickHandler {
-    private Animator anim;
+public class HandCard : MonoBehaviour {
     private CardType mycard = CardType.Null;
-    private HumanPlayer myplayer;
-    private Deck mydeck;
-	// Use this for initialization
-	void Start () {
-        anim = GetComponent<Animator>();
-	}
-	
-	// Update is called once per frame
-	void Update() {
-		
-	}
+    public HumanPlayer player;
+    public GameObject toolTip;
+    private EventTrigger myEventTrigger;
 
-    public void ApplyCard(CardType card, Sprite texture, HumanPlayer player)
+    public void Start()
     {
-        myplayer = player;
-        mydeck = player.GetComponentInParent<Deck>();
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.PointerClick;
+        entry.callback.AddListener((data) => { OnPointerClick((PointerEventData)data); });
+        myEventTrigger = GetComponentInChildren<EventTrigger>();
+        myEventTrigger.triggers.Add(entry);
+        toolTip.SetActive(false);
+    }
+
+    public void ApplyCard(CardInfo info)
+    {
         Image image = GetComponent<Image>();
-        image.sprite = texture;
-        mycard = card;
+        image.sprite = info.cardSprite;
+        GetComponentInChildren<Text>().text = info.tooltipText;
+        mycard = info.type;
     }
 
     void OnDestroy()
@@ -36,6 +36,6 @@ public class HandCard : MonoBehaviour, IPointerClickHandler {
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        myplayer.PlayCard(this.mycard);
+        player.PlayCard(this.mycard);
     }
 }

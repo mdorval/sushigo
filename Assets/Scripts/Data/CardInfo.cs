@@ -7,4 +7,6 @@ public class CardInfo  {
     public CardType type;
     public int copiesInDeck = 0;
     public Sprite cardSprite;
+    [TextArea(3,10)]
+    public string tooltipText;
 }

@@ -24,6 +24,12 @@ public abstract class Player : MonoBehaviour {
         mydeck = GetComponentInParent<Deck>();
         mydeck.AddScoreCard(scoreCard);
         distanceBetweenScoreGroup = new Vector3(mydeck.playedCardPrefab.transform.localScale.x + 0.04f, 0, 0);
+        Init();
+    }
+
+    public virtual void Init()
+    {
+
     }
 
     public abstract void dealHand(List<CardType> dealthand);
@@ -33,7 +39,31 @@ public abstract class Player : MonoBehaviour {
         passedCards = handCards;
         return passedCards.Count > 0;
     }
+
+    public void reset()
+    {
+        cardToPlay = CardType.Null;
+        clearCards(false);
+        scoreCard.clear();
+        handCards.Clear();
+        passedCards.Clear();
+    }
     
+    public void clearCards(bool savePuddings)
+    {
+        foreach (ScoreGroup group in GetComponentsInChildren<ScoreGroup>())
+        {
+            if (savePuddings && group.GetType() == typeof(PuddingScoreGroup))
+            {
+                group.transform.localPosition = new Vector3(0, 0, 0);
+            }
+            else
+            {
+                Destroy(group);
+            }
+        }
+    }
+
     public void pickCardToPlay(CardType card)
     {
         handCards.Remove(card);

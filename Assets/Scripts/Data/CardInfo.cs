@@ -9,4 +9,6 @@ public class CardInfo  {
     public Sprite cardSprite;
     [TextArea(3,10)]
     public string tooltipText;
+    [TextArea(10,10)]
+    public string rulesPageText;
 }

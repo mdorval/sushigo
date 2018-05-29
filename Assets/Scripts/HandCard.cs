@@ -18,7 +18,7 @@ public class HandCard : MonoBehaviour {
         entry.callback.AddListener((data) => { OnPointerClick((PointerEventData)data); });
         myEventTrigger = GetComponentInChildren<EventTrigger>();
         myEventTrigger.triggers.Add(entry);
-        toolTip.SetActive(false);
+        //toolTip.SetActive(false);
     }
 
     public void ApplyCard(CardInfo info)

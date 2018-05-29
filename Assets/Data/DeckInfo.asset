@@ -18,59 +18,105 @@ MonoBehaviour:
     tooltipText: 'The most rolls at end of round is worth 6 points.
 
       The second most rolls is worth 3 points.'
+    rulesPageText: 
   - type: 2
     copiesInDeck: 12
     cardSprite: {fileID: 21300014, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
     tooltipText: 'The most rolls at end of round is worth 6 points.
 
       The second most rolls is worth 3 points.'
+    rulesPageText: '
+
+
+      The icons at the top of the sushi roll cards are added up at the end of each
+      round. The player with the most sushi rolls is awarded 6 points, and the player
+      with the second most is awarded 3 points. In the event of a tie, the players
+      each receive 3 points, and no points are given for second place.'
   - type: 3
     copiesInDeck: 8
     cardSprite: {fileID: 21300002, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
     tooltipText: 'The most rolls at end of round is worth 6 points.
 
       The second most rolls is worth 3 points.'
+    rulesPageText: 
   - type: 4
     copiesInDeck: 14
     cardSprite: {fileID: 21300020, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
-    tooltipText: Each dumping is worth 1 more than the previous dumping played this
+    tooltipText: Each dumpling is worth 1 more than the previous dumpling played this
       round, to a maximum of 5
+    rulesPageText: '
+
+
+      Your first dumpling card is worth 1 point, the second card is worth 2 points,
+      the third is worth 3, and so on, to a maximum of 5 points per dumpling.'
   - type: 5
     copiesInDeck: 5
     cardSprite: {fileID: 21300000, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
     tooltipText: Worth 3 points
+    rulesPageText: '
+
+
+      Each squid nigiri is worth 3 points.
+
+      <i>If played after a wasabi card, this card can be worth 9 points!</i>'
   - type: 6
     copiesInDeck: 10
     cardSprite: {fileID: 21300004, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
     tooltipText: Worth 2 points
+    rulesPageText: "\n\nEach salmon nigiri is worth 2 points. \n<i>If played after
+      a wasabi card, this card can be worth 6 points!</i>"
   - type: 7
     copiesInDeck: 5
     cardSprite: {fileID: 21300016, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
     tooltipText: Worth 1 points
+    rulesPageText: "\n\nEach egg nigiri is worth 1 point. \n<i>If played after a wasabi
+      card, this card can be worth 3 points!</i>"
   - type: 8
     copiesInDeck: 6
     cardSprite: {fileID: 21300006, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
     tooltipText: The next Nigiri you play is worth 3x points
+    rulesPageText: "\n\nWhen you play a wasabi, the next nigiri card you play will
+      be worth 3x the points. \n<b>BEWARE:</b> if you do not play a nigiri card before
+      the round is over, the wasabi card is worth 0 points!"
   - type: 9
     copiesInDeck: 14
     cardSprite: {fileID: 21300018, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
     tooltipText: '3 Sashimi at the end of round is worth 10.
 
       Fewer Sashimi is worth nothing'
+    rulesPageText: "\n\nYou will receive 10 points for every 3 sashimi you have played.
+      \n<b>BEWARE:</b> if you have fewer than 3 sashimi by the end of the round, the
+      sashimi cards are worth 0 points!"
   - type: 10
     copiesInDeck: 14
     cardSprite: {fileID: 21300008, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
-    tooltipText: '3 Tempura at the end of round is worth 10.
+    tooltipText: '2 Tempura at the end of round is worth 5.
 
       Fewer Tempura is worth nothing'
+    rulesPageText: "\n\nYou will receive 5 points for every 2 tempura you have played.
+      \n<b>BEWARE:</b> if you have only 1 tempura by the end of the round, the tempura
+      card is worth 0 points!"
   - type: 11
     copiesInDeck: 10
     cardSprite: {fileID: 21300012, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
     tooltipText: 'At end of game, the most Puddings is worth 6 points.
 
       The least Puddings is worth -6 points'
+    rulesPageText: '
+
+
+      Puddings remain in play until the very end of the game. The player with the
+      most puddings is awardes 6 points. The player with the fewest puddings is penalized
+      -6 points. '
   - type: 12
     copiesInDeck: 4
     cardSprite: {fileID: 21300010, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
     tooltipText: In a future turn you can trade your chopsticks in for the ability
       to select two cards from your hand
+    rulesPageText: '
+
+
+      The chopsticks card is worth 0 points. However, when you have the chopsticks
+      in play, you may choose to pick 2 cards from your hand instead of 1 by placing
+      the chopsticks back into your hand. The chopsticks are then passed to the next
+      player along with your hand.'

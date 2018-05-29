@@ -8,11 +8,14 @@ public class MainMenuManager : MonoBehaviour {
     public Button RulesButton;
     public Button AboutButton;
     public Button QuitButton;
+    public Button RulesNextButton;
     public List<Button> BackToMenuButtons;
 
     private GameObject CurrentPanel;
     private GameObject MainPanel;
     public GameObject AboutPanel;
+    public GameObject RulesPanel;
+    public RulesCardsManager RulesCardsPanel;
 
     // Use this for initialization
     void Start()
@@ -22,6 +25,8 @@ public class MainMenuManager : MonoBehaviour {
         QuitButton.onClick.AddListener(Application.Quit);
         PlayButton.onClick.AddListener(LoadGame);
         AboutButton.onClick.AddListener(LoadAboutPanel);
+        RulesButton.onClick.AddListener(LoadRulesPanel);
+        RulesNextButton.onClick.AddListener(LoadRulesCardsPanel);
         foreach (Button backButton in BackToMenuButtons)
         {
             backButton.onClick.AddListener(LoadMainPanel);
@@ -40,6 +45,13 @@ public class MainMenuManager : MonoBehaviour {
         SceneManager.LoadScene(1);
     }
 
-    void LoadMainPanel() { LoadPanel(MainPanel); }
-    void LoadAboutPanel() { LoadPanel(AboutPanel); }
+    public void LoadMainPanel() { LoadPanel(MainPanel); }
+    public void LoadAboutPanel() { LoadPanel(AboutPanel); }
+    public void LoadRulesPanel() { LoadPanel(RulesPanel); }
+    public void LoadRulesCardsPanel()
+    {
+        RulesCardsPanel.Reset();
+        LoadPanel(RulesCardsPanel.gameObject);
+    }
+
 }

@@ -9,7 +9,7 @@ public class RollScoreGroup : ScoreGroup {
         return card == CardType.Roll_Double || card == CardType.Roll_Single || card == CardType.Roll_Triple;
     }
 
-    public override void CardPlayedOnGroup(CardType card, ScoreCard scoreCard)
+    public override void CardPlayedOnGroup(CardType card)
     {
         switch (card)
         {

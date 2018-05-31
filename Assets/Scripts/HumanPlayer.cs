@@ -7,6 +7,7 @@ public class HumanPlayer : Player
     List<PlayedCard> playedCards;
     public GameObject hand;
     public GameObject cardPrefab;
+    public GameObject playingCardPrefab;
     private List<HandCard> cards = new List<HandCard>();
     public override void Init()
     {
@@ -46,11 +47,14 @@ public class HumanPlayer : Player
         }
 
     }
+
+
     public void PlayCard(CardType card)
     {
         pickCardToPlay(card);
         //DestroyCards();
         hand.SetActive(false);
-        GetComponentInParent<Deck>().StartNextTurn();
+        //GetComponentInParent<Deck>().StartNextTurn();
     }
+
 }

@@ -11,7 +11,7 @@ public class NigiriScoreGroup : ScoreGroup {
         return false;
     }
 
-    public override void CardPlayedOnGroup(CardType card, ScoreCard scoreCard)
+    public override void CardPlayedOnGroup(CardType card)
     {
         switch (card)
         {

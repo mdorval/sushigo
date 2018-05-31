@@ -10,7 +10,7 @@ public class GenericScoreGroup : ScoreGroup {
         return false;
     }
 
-    public override void CardPlayedOnGroup(CardType card, ScoreCard scoreCard)
+    public override void CardPlayedOnGroup(CardType card)
     {
         //Do nothing
     }

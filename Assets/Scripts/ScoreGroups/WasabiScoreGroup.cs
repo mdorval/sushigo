@@ -10,7 +10,7 @@ public class WasabiScoreGroup : ScoreGroup {
             && cards.Count < 2;
     }
 
-    public override void CardPlayedOnGroup(CardType card, ScoreCard scoreCard)
+    public override void CardPlayedOnGroup(CardType card)
     {
         //Ignore wasabi card points-wise
         switch (card)

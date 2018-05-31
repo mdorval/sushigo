@@ -13,6 +13,7 @@ public class Deck : MonoBehaviour {
     private int topCard = -1;
     private int roundNumber = 1;
     public GameObject playedCardPrefab;
+    public GameObject playingCardPrefab;
     public DeckInfo deckInfo;
     public Text scoreText;
     public ContinueDialog continueDialog;
@@ -25,6 +26,36 @@ public class Deck : MonoBehaviour {
     void Update()
     {
 
+    }
+
+    private bool AllPlayersAtState(Player.PlayerState stateToCheck)
+    {
+        foreach(Player player in players)
+        {
+            if (player.State() != stateToCheck)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public void OnPlayerStateChanged(Player player, Player.PlayerState newState)
+    {
+        if (!AllPlayersAtState(newState)) { return; }
+        switch(newState)
+        {
+            case Player.PlayerState.WaitingToPlay:
+                PlayCards();
+                break;
+            case Player.PlayerState.WaitingToDraw:
+                UpdateText();
+                StartNextTurn();
+                break;
+            default:
+                Debug.Log("Lol");
+                break;
+        }
     }
 
     public void AddScoreCard(ScoreCard card)
@@ -96,6 +127,7 @@ public class Deck : MonoBehaviour {
         {
             players.AddLast(player);
             player.dealHand(drawHand(8));
+            player.evtStateChanged += OnPlayerStateChanged;
         }
     }
     public void finishRound()
@@ -127,12 +159,16 @@ public class Deck : MonoBehaviour {
         UpdateText();
     }
 
-    public void StartNextTurn()
+    private void PlayCards()
     {
         foreach (Player player in players)
         {
             player.playCard();
         }
+    }
+
+    public void StartNextTurn()
+    {
         UpdateText();
 
         bool handPassed = false;

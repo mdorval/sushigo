@@ -8,7 +8,7 @@ public class SashimiScoreGroup : ScoreGroup {
         return card == CardType.Sashimi && cards.Count < 3;
     }
 
-    public override void CardPlayedOnGroup(CardType card, ScoreCard scoreCard)
+    public override void CardPlayedOnGroup(CardType card)
     {
         if (cards.Count == 3)
         {

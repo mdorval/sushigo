@@ -9,7 +9,7 @@ public class DumplingScoreGroup : ScoreGroup {
         return card == CardType.Dumpling;
     }
 
-    public override void CardPlayedOnGroup(CardType card, ScoreCard scoreCard)
+    public override void CardPlayedOnGroup(CardType card)
     {
         if (cards.Count <= 5)
         {

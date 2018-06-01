@@ -109,15 +109,13 @@ public class ComputerPlayer : Player {
         {
             cpuHand.show(handCards.Count);
             //A bit of randomness to give it some character
-            Invoke("CPUMadeChoice", UnityEngine.Random.Range(1.0f, 4.0f));
+            Invoke("CPUMadeChoice", UnityEngine.Random.Range(0.5f, 2.5f));
         }
         else
         {
             OnCardPicked(handCards.First());
         }
     }
-
-
 
     private void CPUMadeChoice()
     {

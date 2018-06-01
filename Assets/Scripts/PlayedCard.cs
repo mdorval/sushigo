@@ -20,10 +20,15 @@ public class PlayedCard : Mover {
         Move();
 	}
 
-    public void ApplyCard(CardType cardToApply,Texture2D texture)
+    /// <summary>
+    /// Applies Card to this PlayedCard Object
+    /// </summary>
+    /// <param name="cardToApply">The card to apply</param>
+    /// <param name="texture"></param>
+    public void ApplyCard(CardInfo cardToApply)
     {
         SkinnedMeshRenderer renderer = GetComponent<SkinnedMeshRenderer>();
-        renderer.material.mainTexture = texture;
-        card = cardToApply;
+        renderer.material.mainTexture = cardToApply.Texture();
+        card = cardToApply.type;
     }
 }

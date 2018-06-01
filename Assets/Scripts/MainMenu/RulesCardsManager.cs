@@ -45,7 +45,7 @@ public class RulesCardsManager : MonoBehaviour {
             if (cardsToShow.Count() < (i+1))
             {
                 //Hide the panel if we're not showing all the cards
-                //displayPanels[i].SetActive(false);
+                displayPanels[i].SetActive(false);
                 displayText[i].text = "";
                 displaySprites[i].gameObject.SetActive(false);
             }

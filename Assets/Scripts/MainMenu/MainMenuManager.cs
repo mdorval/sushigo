@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+/// <summary>
+/// Manager for all MainMenuPanels, but attached to the first MainMenu Panel
+/// </summary>
 public class MainMenuManager : MonoBehaviour {
     public Button PlayButton;
     public Button RulesButton;
@@ -17,7 +20,6 @@ public class MainMenuManager : MonoBehaviour {
     public GameObject RulesPanel;
     public RulesCardsManager RulesCardsPanel;
 
-    // Use this for initialization
     void Start()
     {
         MainPanel = this.gameObject;
@@ -34,20 +36,39 @@ public class MainMenuManager : MonoBehaviour {
 
 	}
 
+    /// <summary>
+    /// Loads The given panel and hides the current panel
+    /// </summary>
+    /// <param name="panelToLoad">The Panel to load</param>
     private void LoadPanel(GameObject panelToLoad)
     {
         CurrentPanel.SetActive(false);
         panelToLoad.SetActive(true);
         CurrentPanel = panelToLoad;
     }
+    /// <summary>
+    /// Loads the Game
+    /// </summary>
     void LoadGame()
     {
         SceneManager.LoadScene(1);
     }
 
+    /// <summary>
+    /// Loads the main Panel
+    /// </summary>
     public void LoadMainPanel() { LoadPanel(MainPanel); }
+    /// <summary>
+    /// Loads the about Panel
+    /// </summary>
     public void LoadAboutPanel() { LoadPanel(AboutPanel); }
+    /// <summary>
+    /// Loads the Rules Panel
+    /// </summary>
     public void LoadRulesPanel() { LoadPanel(RulesPanel); }
+    /// <summary>
+    /// Loads the Rules Cards Panel and sets it to the first page
+    /// </summary>
     public void LoadRulesCardsPanel()
     {
         RulesCardsPanel.Reset();

@@ -158,7 +158,7 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
         Vector3 position = distanceBetweenScoreGroup;
         //Create the PlayingCard prefab to bring the card into 3D space
         playingCard = Instantiate(Deck.Instance().playingCardPrefab, handPosition.transform).GetComponent<PlayedCard>();
-        playingCard.ApplyCard(card, Deck.Instance().textureForCard(card));
+        playingCard.ApplyCard(Deck.Instance().deckInfo.byType(card));
         //pause the playing card, we will hold it in midair until everyone has picked a card
         playingCard.Pause();
         ScoreGroup foundGroup = null;
@@ -187,7 +187,7 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
     public void PlayCard()
     {
         SetNewState(PlayerState.PlayingCard);
-        playingCard.Play();
+        playingCard.Resume();
         playingCard = null;
     }
 

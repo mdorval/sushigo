@@ -21,7 +21,9 @@ public class Deck : MonoBehaviour {
     public DeckInfo deckInfo;
     public Text scoreText;
     public ContinueDialog continueDialog;
+
     private bool passLeft = true;
+
     private static Deck instance = null;
     public static Deck Instance()
     {
@@ -107,24 +109,6 @@ public class Deck : MonoBehaviour {
                 + "</color>\n";
         }
         scoreText.text = rettext;
-    }
-    public Sprite spriteForCard(CardType card)
-    {
-        return deckInfo.byType(card).cardSprite;
-    }
-
-    public Texture2D textureForCard(CardType card)
-    {
-        if (!cardTextures.ContainsKey(card))
-        {
-            Sprite sprite = deckInfo.byType(card).cardSprite;
-            Texture2D cardTexture = new Texture2D((int)sprite.rect.width, (int)sprite.rect.height);
-            var pixels = sprite.texture.GetPixels((int)sprite.textureRect.x, (int)sprite.textureRect.y, (int)sprite.textureRect.width, (int)sprite.textureRect.height);
-            cardTexture.SetPixels(pixels);
-            cardTexture.Apply();
-            cardTextures[card] = cardTexture;
-        }
-        return cardTextures[card];
     }
     public Player GetNeighbor(Player player)
     {

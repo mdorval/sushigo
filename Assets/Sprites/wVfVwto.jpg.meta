@@ -15,6 +15,8 @@ TextureImporter:
     21300020: Dumpling
     21300022: RollSingle
     21300024: background
+    21300026: roll
+    21300028: PuddingIcon
   externalObjects: {}
   serializedVersion: 5
   mipmaps:
@@ -376,13 +378,53 @@ TextureImporter:
         width: 300
         height: 467
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
       spriteID: c70baf01ba3582541ae103f054c22296
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: roll
+      rect:
+        serializedVersion: 2
+        x: 1138
+        y: 4931
+        width: 169
+        height: 162
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ebf3f0f5fc6113e4790a308a0354d032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PuddingIcon
+      rect:
+        serializedVersion: 2
+        x: 3881
+        y: 5776
+        width: 167
+        height: 171
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 73166bb28be483c4ab93f05befc6c492
       vertices: []
       indices: 
       edges: []

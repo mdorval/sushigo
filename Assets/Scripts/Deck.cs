@@ -13,10 +13,13 @@ public class Deck : MonoBehaviour {
     private int topCard = -1;
     private int roundNumber = 1;
 
-    public GameObject playedCardPrefab;
     public GameObject playingCardPrefab;
     public GameObject cardPackPrefab;
     public GameObject cpuHandPrefab;
+
+    public GameObject scorePanel;
+    public GameObject rollPanel;
+    public GameObject puddingPanel;
 
     public DeckInfo deckInfo;
     public Text scoreText;
@@ -37,6 +40,7 @@ public class Deck : MonoBehaviour {
         }
         return instance;
     }
+
     public bool PassingLeft()
     {
         return passLeft;
@@ -84,31 +88,54 @@ public class Deck : MonoBehaviour {
         UpdateText();
     }
 
+    delegate string valueString(ScoreCard card);
+    delegate IEnumerable<ScoreCard> scoreCardSort(ScoreCards scoreCards);
+    delegate int potentialPoints(ScoreCard card, ScoreCards cards);
+    void FillScorePanel(GameObject scorePanel,ScoreCards scoreCards, scoreCardSort sortFunction, valueString valueStringFunction,potentialPoints potentialPointsFunction = null)
+    {
+        var scorePanels = scorePanel.GetComponentsInChildren<Text>();
+        int counter = 0;
+        foreach (ScoreCard scoreCard in sortFunction(scoreCards))
+        {
+            Text tplayer = scorePanels[counter++];
+            tplayer.color = scoreCard.TextColor();
+            tplayer.text = scoreCard.Name();
+            Text tscore = scorePanels[counter++];
+            tscore.color = scoreCard.TextColor();
+            tscore.text = valueStringFunction(scoreCard);
+            if(potentialPointsFunction != null)
+            {
+                int value = potentialPointsFunction(scoreCard,scoreCards);
+                //ignore value == 0
+                if (value > 0)
+                {
+                    tscore.text += "  <color='#00FF00'>+" + value.ToString() + "</color>";
+                }
+                else if (value < 0)
+                {
+                    tscore.text += "  <color='#FF0000'>" + value.ToString() + "</color>";
+                }
+            }
+        }
+    }
+
     void UpdateText()
     {
         scoreCards.UpdateRankScores();
-        string rettext = "Score\n";
-        foreach (ScoreCard score in scoreCards.SortByScore())
-        {
-            rettext += "<color='#" + (score.HtmlColor()) + "'>" + score.Name() + ": " + score.Score() + "</color>\n";
-        }
-        rettext += "\n\nRolls\n";
-        foreach (ScoreCard score in scoreCards.SortByRolls())
-        {
-            int rollScore = scoreCards.RollScore(score);
-            rettext += "<color='#" + (score.HtmlColor()) + "'>" + score.Name() + ": " + score.Rolls() 
-                + (rollScore != 0 ? "("+rollScore+" Points)" : "")
-                +"</color>\n";
-        }
-        rettext += "\n\nPuddings\n";
-        foreach (ScoreCard score in scoreCards.SortByPudding())
-        {
-            int puddingScore = scoreCards.PuddingScore(score);
-            rettext += "<color='#" + (score.HtmlColor()) + "'>" + score.Name() + ": " + score.Puddings()
-                + (puddingScore != 0 ? "(" + puddingScore + " Points)" : "")
-                + "</color>\n";
-        }
-        scoreText.text = rettext;
+        //ScoreCards
+        FillScorePanel(scorePanel, scoreCards, 
+            scoreCards => scoreCards.SortByScore(),
+            scoreCard => scoreCard.Score().ToString());
+        //Puddings
+        FillScorePanel(puddingPanel, scoreCards,
+            scoreCards => scoreCards.SortByPudding(),
+            scoreCard => scoreCard.Puddings().ToString(),
+            (scoreCard,scoreCards) => scoreCards.PuddingScore(scoreCard));
+        //Rolls
+        FillScorePanel(rollPanel, scoreCards,
+            scoreCards => scoreCards.SortByRolls(),
+            scoreCard => scoreCard.Rolls().ToString(),
+            (scoreCard, scoreCards) => scoreCards.RollScore(scoreCard));
     }
     public Player GetNeighbor(Player player)
     {

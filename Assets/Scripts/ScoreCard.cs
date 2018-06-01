@@ -129,8 +129,10 @@ public class ScoreCard
     public void SetHtmlColor(Color textColor)
     {
         _htmlColor = ColorUtility.ToHtmlStringRGB(textColor);
+        _textColor = textColor;
     }
     private string _htmlColor;
+    private Color _textColor;
     private string _userName;
     private int _score = 0;
     private int _rolls = 0;
@@ -160,6 +162,7 @@ public class ScoreCard
 
     public string Name() { return _userName; }
     public string HtmlColor() { return _htmlColor; }
+    public Color TextColor() { return _textColor; }
     public int Score() { return _score;  }
     public int Rolls() { return _rolls; }
     public int Puddings() { return _puddings; }

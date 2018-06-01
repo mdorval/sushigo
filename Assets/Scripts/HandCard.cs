@@ -7,10 +7,14 @@ using UnityEngine.UI;
 
 public class HandCard : MonoBehaviour {
     private CardType mycard = CardType.Null;
-    public HumanPlayer player;
+    private HumanPlayer _player = null;
     public GameObject toolTip;
     private EventTrigger myEventTrigger;
 
+    public void SetPlayer(HumanPlayer player)
+    {
+        _player = player;
+    }
     public void Start()
     {
         EventTrigger.Entry entry = new EventTrigger.Entry();
@@ -36,6 +40,6 @@ public class HandCard : MonoBehaviour {
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        player.PlayCard(this.mycard);
+        _player.PlayCard(this.mycard);
     }
 }

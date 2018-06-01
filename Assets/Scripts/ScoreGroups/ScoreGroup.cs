@@ -17,11 +17,6 @@ public abstract class ScoreGroup: MonoBehaviour {
 
     public ScoreGroupEvent.CardPlayed evtCardPlayed = null;
 
-    public void onCardPlayed(CardType cardType)
-    {
-
-    }
-
     public void SetScoreCard(ScoreCard myScoreCard)
     {
         scoreCard = myScoreCard;
@@ -31,13 +26,18 @@ public abstract class ScoreGroup: MonoBehaviour {
     {
         Destroy(gameObject);
     }
-
-    public void CardInPlace(PlayedCard card)
+    public MoveRequest GetNextCardMoveRequest()
     {
-        card.transform.SetParent(this.transform);
+        MoveRequest request = new MoveRequest(this.transform.TransformPoint(positionOfNextCard), this.gameObject, CardInPlace);
+        positionOfNextCard += nextCardDelta;
+        return request;
+    }
+        
+    public void CardInPlace(GameObject obj)
+    {
+        PlayedCard card = obj.GetComponent<PlayedCard>();
         cards.Add(card.card);
         CardPlayedOnGroup(card.card);
-        positionOfNextCard += nextCardDelta;
         if (evtCardPlayed != null)
         {
             evtCardPlayed(card.card);

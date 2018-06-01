@@ -12,20 +12,37 @@ public class Deck : MonoBehaviour {
     private ScoreCards scoreCards = new ScoreCards();
     private int topCard = -1;
     private int roundNumber = 1;
+
     public GameObject playedCardPrefab;
     public GameObject playingCardPrefab;
+    public GameObject cardPackPrefab;
+    public GameObject cpuHandPrefab;
+
     public DeckInfo deckInfo;
     public Text scoreText;
     public ContinueDialog continueDialog;
-    private bool passLeft = false;
+    private bool passLeft = true;
+    private static Deck instance = null;
+    public static Deck Instance()
+    {
+        if (instance == null)
+        {
+            instance = GameObject.FindObjectOfType<Deck>();
+            if (instance == null)
+            {
+                Debug.LogError("Deck not found!");
+            }
+        }
+        return instance;
+    }
+    public bool PassingLeft()
+    {
+        return passLeft;
+    }
     void Start()
     {
         Populate();
         GetPlayers();
-    }
-    void Update()
-    {
-
     }
 
     private bool AllPlayersAtState(Player.PlayerState stateToCheck)
@@ -52,8 +69,9 @@ public class Deck : MonoBehaviour {
                 UpdateText();
                 StartNextTurn();
                 break;
-            default:
-                Debug.Log("Lol");
+            case Player.PlayerState.WaitingForNextRound:
+                UpdateText();
+                FinishRound();
                 break;
         }
     }
@@ -108,7 +126,7 @@ public class Deck : MonoBehaviour {
         }
         return cardTextures[card];
     }
-    Player GetNeighbor(Player player)
+    public Player GetNeighbor(Player player)
     {
         LinkedListNode<Player> node = players.Find(player);
         if (passLeft)
@@ -126,11 +144,14 @@ public class Deck : MonoBehaviour {
         foreach (Player player in GetComponentsInChildren<Player>())
         {
             players.AddLast(player);
-            player.dealHand(drawHand(8));
             player.evtStateChanged += OnPlayerStateChanged;
         }
+        foreach (Player player in GetComponentsInChildren<Player>())
+        {
+            player.DealHand(DrawHand(8));
+        }
     }
-    public void finishRound()
+    public void FinishRound()
     {
         scoreCards.scoreRolls();
         UpdateText();
@@ -153,8 +174,8 @@ public class Deck : MonoBehaviour {
         Populate();
         foreach (Player player in players)
         {
-            player.reset();
-            player.dealHand(drawHand(8));
+            player.Reset();
+            player.DealHand(DrawHand(8));
         }
         UpdateText();
     }
@@ -163,29 +184,15 @@ public class Deck : MonoBehaviour {
     {
         foreach (Player player in players)
         {
-            player.playCard();
+            player.PlayCard();
         }
     }
 
     public void StartNextTurn()
     {
-        UpdateText();
-
-        bool handPassed = false;
         foreach (Player player in players)
         {
-            handPassed = player.PassHand();
-        }
-        if (handPassed)
-        {
-            foreach (Player player in players)
-            {
-                GetNeighbor(player).dealHand(player.passedCards);
-            }
-        }
-        else
-        {
-            finishRound();
+            player.DrawCardPack();
         }
     }
 
@@ -193,7 +200,7 @@ public class Deck : MonoBehaviour {
     {
         foreach (Player player in players)
         {
-            player.clearCards(true);
+            player.ClearCards(true);
         }
 
     }
@@ -203,24 +210,18 @@ public class Deck : MonoBehaviour {
         CleanUpRound();
         foreach (Player player in players)
         {
-            player.dealHand(drawHand(8));
+            player.DealHand(DrawHand(8));
         }
     }
 
-    private List<CardType> drawHand(int size)
+    private List<CardType> DrawHand(int size)
     {
         List<CardType> hand = new List<CardType>();
         for (int i=0;i<size;i++)
         {
-            hand.Add(draw());
+            hand.Add(drawPile[topCard--]);
         }
         return hand;
-    }
-
-    public CardType draw()
-    {
-        CardType card = drawPile[topCard--];
-        return card;
     }
 	
     void Populate()

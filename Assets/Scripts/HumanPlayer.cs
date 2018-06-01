@@ -14,15 +14,13 @@ public class HumanPlayer : Player
         foreach (HandCard card in hand.GetComponentsInChildren<HandCard>())
         {
             cards.Add(card);
-            card.player = this;
+            card.SetPlayer(this);
         }
     }
-    public override void dealHand(List<CardType> dealthand)
+    protected override void OnHandDealt()
     {
         hand.SetActive(true);
-        handCards = dealthand;
-        //DestroyCards();
-        var myenumerator = dealthand.GetEnumerator();
+        var myenumerator = handCards.GetEnumerator();
         foreach (HandCard card in cards)
         {
             if (myenumerator.MoveNext())
@@ -31,7 +29,7 @@ public class HumanPlayer : Player
                 {
                     card.gameObject.SetActive(true);
                 }
-                card.ApplyCard(GetComponentInParent<Deck>().deckInfo.byType(myenumerator.Current));
+                card.ApplyCard(Deck.Instance().deckInfo.byType(myenumerator.Current));
             }
             else
             {
@@ -39,22 +37,11 @@ public class HumanPlayer : Player
             }
         }
     }
-    private void DestroyCards()
-    {
-        foreach (HandCard card in hand.GetComponentsInChildren<HandCard>())
-        {
-            card.gameObject.SetActive(false);
-        }
-
-    }
-
 
     public void PlayCard(CardType card)
     {
-        pickCardToPlay(card);
-        //DestroyCards();
+        OnCardPicked(card);
         hand.SetActive(false);
-        //GetComponentInParent<Deck>().StartNextTurn();
     }
 
 }

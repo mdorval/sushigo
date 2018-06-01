@@ -119,10 +119,16 @@ public class ScoreCards: List<ScoreCard>
 
 public class ScoreCard
 {
-    public ScoreCard(string userName, Color textColor)
+    public ScoreCard()
+    {
+    }
+    public void SetUserName(string userName)
+    {
+        _userName = userName;
+    }
+    public void SetHtmlColor(Color textColor)
     {
         _htmlColor = ColorUtility.ToHtmlStringRGB(textColor);
-        _userName = userName;
     }
     private string _htmlColor;
     private string _userName;

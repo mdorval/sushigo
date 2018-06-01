@@ -5,7 +5,6 @@ using UnityEngine;
 namespace PlayerEvent
 {
     public delegate void CardChosen(Player myPlayer); //used to speed up AI if taking too long
-    public delegate void CardPlayed(Player myPlayer, CardType card); //used for AI logic?
     public delegate void StateChanged(Player myPlayer, Player.PlayerState stateToCheck);
 }
 
@@ -14,86 +13,137 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
     public enum PlayerState
     {
         WaitingToDraw,
-        //TODO: Drawing
+        //This transition handled by Deck
+        Drawing,
         ChoosingCard,
+        Passing,
         WaitingToPlay,
+        //This transition handled by Deck
         PlayingCard,
-        //TODO: Passing
+        //This transition only happens if there's no cards left, handled by Deck
+        WaitingForNextRound,
+        //This transition handled by Deck
     }
-    protected List<CardType> handCards;
-    public List<CardType> passedCards;
-    public ScoreCard scoreCard;
+    protected List<CardType> handCards = new List<CardType>();
+    public ScoreCard scoreCard = new ScoreCard();
     public Color textColor;
     public string playerName;
     public GameObject handPosition;
-
+    private CardPack cardPack = null;
+    private bool endOfRound = false;
+    private PlayedCard playingCard = null;
     public PlayerEvent.StateChanged evtStateChanged = null;
     public PlayerEvent.CardChosen evtCardChosen = null;
-    public PlayerEvent.CardPlayed evtCardPlayed = null;
 
     //public EventStateChanged evStateChanged = null;
+    protected CardType cardToPlay = CardType.Null;
+
+    protected Vector3 distanceBetweenScoreGroup = new Vector3(0.7f, 0, 0);
 
     private PlayerState _state = PlayerState.WaitingToDraw;
     public PlayerState State()
     {
         return _state;
     }
-    private void setNewState(PlayerState newState)
+    protected void SetNewState(PlayerState newState)
     {
         _state = newState;
         if (evtStateChanged != null)
         {
             evtStateChanged(this, newState);
         }
-
-        //GetComponentInParent<Deck>().OnPlayerStateChanged(newState);
     }
-    protected CardType cardToPlay = CardType.Null;
-
-    protected Vector3 distanceBetweenScoreGroup;
-
-    private Deck mydeck;
 
     public int playerIndex = 0;
 
     public void Start()
     {
-        scoreCard = new ScoreCard(playerName, textColor);
-        mydeck = GetComponentInParent<Deck>();
-        mydeck.AddScoreCard(scoreCard);
-        distanceBetweenScoreGroup = new Vector3(mydeck.playedCardPrefab.transform.localScale.x + 0.04f, 0, 0);
+        scoreCard.SetUserName(playerName);
+        scoreCard.SetHtmlColor(textColor);
+        Deck.Instance().AddScoreCard(scoreCard);
         Init();
     }
 
-    public virtual void Init()
-    {
+    public virtual void Init() { }
 
+    public void DealHand(List<CardType> dealthand)
+    {
+        handCards.AddRange(dealthand);
+        OnHandDealt();
     }
 
-    public abstract void dealHand(List<CardType> dealthand);
+    protected abstract void OnHandDealt();
 
-    public bool PassHand()
+    public bool PassPack()
     {
-        passedCards = handCards;
-        return passedCards.Count > 0;
+        SetNewState(PlayerState.Passing);
+        if (handCards.Count == 0)
+        {
+            SetNewState(PlayerState.WaitingToPlay);
+            endOfRound = true;
+            return false;
+        }
+        endOfRound = false;
+        if (cardPack == null)
+        {
+            GameObject gameObj = Instantiate(Deck.Instance().cardPackPrefab, handPosition.transform);
+            cardPack = gameObj.GetComponent<CardPack>();
+        }
+        cardPack.SetCards(handCards);
+        Player neighbor = Deck.Instance().GetNeighbor(this);
+        Vector3 targetPosition;
+        if (Deck.Instance().PassingLeft())
+        {
+            cardPack.gameObject.transform.rotation = transform.rotation;
+            targetPosition = transform.position;
+        }
+        else
+        {
+            cardPack.gameObject.transform.rotation = neighbor.gameObject.transform.rotation;
+            targetPosition = neighbor.transform.position;
+        }
+        cardPack.gameObject.SetActive(true);
+        MoveRequest request = new MoveRequest(targetPosition, neighbor.gameObject, this.OnCardPackPassed,24);
+        cardPack.SetMoveRequest(request);
+        return true;
     }
 
-    public void reset()
+    public void OnCardPackPassed(GameObject gameObject)
     {
-        cardToPlay = CardType.Null;
-        clearCards(false);
+        cardPack = null;
+        SetNewState(PlayerState.WaitingToPlay);
+    }
+
+    public void DrawCardPack()
+    {
+        SetNewState(PlayerState.Drawing);
+        MoveRequest request = new MoveRequest(handPosition.transform.position, this.gameObject, this.OnCardPackDrawn,24);
+        cardPack = this.GetComponentInChildren<CardPack>();
+        cardPack.SetMoveRequest(request);
+    }
+
+    public void OnCardPackDrawn(GameObject gameobject)
+    {
+        cardPack = gameobject.GetComponent<CardPack>();
+        gameobject.SetActive(false);
+        SetNewState(PlayerState.ChoosingCard);
+        DealHand(cardPack.Cards());
+    }
+
+    public void Reset()
+    {
+        ClearCards(false);
         scoreCard.clear();
         handCards.Clear();
-        passedCards.Clear();
     }
-    
-    public void clearCards(bool savePuddings)
+
+    public void ClearCards(bool savePuddings)
     {
         foreach (ScoreGroup group in GetComponentsInChildren<ScoreGroup>())
         {
             if (savePuddings && group.GetType() == typeof(PuddingScoreGroup))
             {
-                group.transform.localPosition = new Vector3(0, 0, 0);
+                group.transform.localPosition = distanceBetweenScoreGroup;
             }
             else
             {
@@ -102,44 +152,46 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
         }
     }
 
-    public void pickCardToPlay(CardType card)
+    public void OnCardPicked(CardType card)
     {
         handCards.Remove(card);
-        cardToPlay = card;
-
-        setNewState(PlayerState.WaitingToPlay);
-    }
-
-    public void playCard()
-    {
-        AddCardToPlayArea(cardToPlay);
-        cardToPlay = CardType.Null;
-    }
-
-    public virtual void AddCardToPlayArea(CardType card)
-    {
-        Vector3 position = new Vector3(0, 0, 0);
-        PlayedCard playingcard = Instantiate(GetComponentInParent<Deck>().playingCardPrefab, handPosition.transform).GetComponent<PlayedCard>();
-        playingcard.ApplyCard(card, GetComponentInParent<Deck>().textureForCard(card));
-        //Get all the played cards first
+        Vector3 position = distanceBetweenScoreGroup;
+        //Create the PlayingCard prefab to bring the card into 3D space
+        playingCard = Instantiate(Deck.Instance().playingCardPrefab, handPosition.transform).GetComponent<PlayedCard>();
+        playingCard.ApplyCard(card, Deck.Instance().textureForCard(card));
+        //pause the playing card, we will hold it in midair until everyone has picked a card
+        playingCard.Pause();
+        ScoreGroup foundGroup = null;
         foreach (ScoreGroup group in GetComponentsInChildren<ScoreGroup>())
         {
             if (group.CanPlayOnGroup(card))
             {
-                playingcard.setTarget(group);
-                return;
+                foundGroup = group;
+                break;
             }
             else
             {
                 position = (new Vector3(group.transform.localPosition.x, 0, 0)) + distanceBetweenScoreGroup;
             }
         }
-        ScoreGroup ngroup = createNewScoreGroupForCard(card, position);
-        playingcard.setTarget(ngroup);
-
+        if (!foundGroup)
+        {
+            foundGroup = CreateNewScoreGroupForCard(card, position);
+        }
+        playingCard.SetMoveRequest(foundGroup.GetNextCardMoveRequest());
+        if (evtCardChosen != null)
+            evtCardChosen(this);
+        PassPack();
     }
 
-    protected ScoreGroup createNewScoreGroupForCard(CardType card,Vector3 localPosition)
+    public void PlayCard()
+    {
+        SetNewState(PlayerState.PlayingCard);
+        playingCard.Play();
+        playingCard = null;
+    }
+
+    protected ScoreGroup CreateNewScoreGroupForCard(CardType card,Vector3 localPosition)
     {
         GameObject gameobj = new GameObject("ScoreGroup");
         gameobj.transform.SetParent(transform);
@@ -178,12 +230,19 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
         }
         ScoreGroup group = gameobj.GetComponent<ScoreGroup>();
         group.SetScoreCard(scoreCard);
-        group.evtCardPlayed += CardPlayed;
+        group.evtCardPlayed += this.OnCardPlayed;
         return group;
     }
 
-    public void CardPlayed(CardType card)
+    public void OnCardPlayed(CardType card)
     {
-        setNewState(PlayerState.WaitingToDraw);
+        if (!endOfRound)
+        {
+            SetNewState(PlayerState.WaitingToDraw);
+        }
+        else
+        {
+            SetNewState(PlayerState.WaitingForNextRound);
+        }
     }
 }

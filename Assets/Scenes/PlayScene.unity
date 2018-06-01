@@ -153,7 +153,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 169f217eedaad064fbeed0b593cecf72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passedCards: 
   textColor: {r: 1, g: 0, b: 0, a: 0}
   playerName: Player
   handPosition: {fileID: 1196345868}
@@ -972,7 +971,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22405605da80f8e42848e9e35983c668, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passedCards: 
   textColor: {r: 0.04280901, g: 1, b: 0, a: 0}
   playerName: Wash
   handPosition: {fileID: 317522212}
@@ -1877,7 +1875,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22405605da80f8e42848e9e35983c668, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passedCards: 
   textColor: {r: 1, g: 0, b: 0.7285099, a: 0}
   playerName: Mal
   handPosition: {fileID: 1507254683}
@@ -2977,7 +2974,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22405605da80f8e42848e9e35983c668, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  passedCards: 
   textColor: {r: 0, g: 0.048597574, b: 1, a: 0}
   playerName: River
   handPosition: {fileID: 238085537}

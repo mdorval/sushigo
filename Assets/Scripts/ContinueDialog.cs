@@ -12,7 +12,7 @@ public class ContinueDialog : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
     }
 
     public void ShowDialog(string dialogText, string buttonText, UnityAction buttonMainAction)

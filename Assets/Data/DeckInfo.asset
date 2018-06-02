@@ -19,6 +19,7 @@ MonoBehaviour:
 
       The second most rolls is worth 3 points.'
     rulesPageText: 
+    particleColor: {r: 0.7254902, g: 0.21568629, b: 0.15686275, a: 1}
   - type: 2
     copiesInDeck: 12
     cardSprite: {fileID: 21300014, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
@@ -32,6 +33,7 @@ MonoBehaviour:
       round. The player with the most sushi rolls is awarded 6 points, and the player
       with the second most is awarded 3 points. In the event of a tie, the players
       each receive 3 points, and no points are given for second place.'
+    particleColor: {r: 0.7411765, g: 0.23137257, b: 0.16862746, a: 1}
   - type: 3
     copiesInDeck: 8
     cardSprite: {fileID: 21300002, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
@@ -39,6 +41,7 @@ MonoBehaviour:
 
       The second most rolls is worth 3 points.'
     rulesPageText: 
+    particleColor: {r: 0.7294118, g: 0.21568629, b: 0.16470589, a: 1}
   - type: 4
     copiesInDeck: 14
     cardSprite: {fileID: 21300020, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
@@ -49,6 +52,7 @@ MonoBehaviour:
 
       Your first dumpling card is worth 1 point, the second card is worth 2 points,
       the third is worth 3, and so on, to a maximum of 5 points per dumpling.'
+    particleColor: {r: 0.89019614, g: 0.8745099, b: 0.7372549, a: 1}
   - type: 5
     copiesInDeck: 5
     cardSprite: {fileID: 21300000, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
@@ -59,18 +63,21 @@ MonoBehaviour:
       Each squid nigiri is worth 3 points.
 
       <i>If played after a wasabi card, this card can be worth 9 points!</i>'
+    particleColor: {r: 0.92549026, g: 0.9294118, b: 0.8588236, a: 1}
   - type: 6
     copiesInDeck: 10
     cardSprite: {fileID: 21300004, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
     tooltipText: Worth 2 points
     rulesPageText: "\n\nEach salmon nigiri is worth 2 points. \n<i>If played after
       a wasabi card, this card can be worth 6 points!</i>"
+    particleColor: {r: 0.9176471, g: 0.6313726, b: 0.12941177, a: 1}
   - type: 7
     copiesInDeck: 5
     cardSprite: {fileID: 21300016, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
     tooltipText: Worth 1 points
     rulesPageText: "\n\nEach egg nigiri is worth 1 point. \n<i>If played after a wasabi
       card, this card can be worth 3 points!</i>"
+    particleColor: {r: 0.9607844, g: 0.909804, b: 0.40000004, a: 1}
   - type: 8
     copiesInDeck: 6
     cardSprite: {fileID: 21300006, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
@@ -78,6 +85,7 @@ MonoBehaviour:
     rulesPageText: "\n\nWhen you play a wasabi, the next nigiri card you play will
       be worth 3x the points. \n<b>BEWARE:</b> if you do not play a nigiri card before
       the round is over, the wasabi card is worth 0 points!"
+    particleColor: {r: 0.7176471, g: 0.67058825, b: 0.16862746, a: 1}
   - type: 9
     copiesInDeck: 14
     cardSprite: {fileID: 21300018, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
@@ -87,6 +95,7 @@ MonoBehaviour:
     rulesPageText: "\n\nYou will receive 10 points for every 3 sashimi you have played.
       \n<b>BEWARE:</b> if you have fewer than 3 sashimi by the end of the round, the
       sashimi cards are worth 0 points!"
+    particleColor: {r: 0.8431373, g: 0.454902, b: 0.44705886, a: 1}
   - type: 10
     copiesInDeck: 14
     cardSprite: {fileID: 21300008, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
@@ -96,6 +105,7 @@ MonoBehaviour:
     rulesPageText: "\n\nYou will receive 5 points for every 2 tempura you have played.
       \n<b>BEWARE:</b> if you have only 1 tempura by the end of the round, the tempura
       card is worth 0 points!"
+    particleColor: {r: 0.9215687, g: 0.7294118, b: 0.23529413, a: 1}
   - type: 11
     copiesInDeck: 10
     cardSprite: {fileID: 21300012, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
@@ -108,6 +118,7 @@ MonoBehaviour:
       Puddings remain in play until the very end of the game. The player with the
       most puddings is awardes 6 points. The player with the fewest puddings is penalized
       -6 points. '
+    particleColor: {r: 0.8980393, g: 0.7058824, b: 0.7176471, a: 1}
   - type: 12
     copiesInDeck: 4
     cardSprite: {fileID: 21300010, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
@@ -120,3 +131,4 @@ MonoBehaviour:
       in play, you may choose to pick 2 cards from your hand instead of 1 by placing
       the chopsticks back into your hand. The chopsticks are then passed to the next
       player along with your hand.'
+    particleColor: {r: 0.75294125, g: 0.6627451, b: 0.46274513, a: 1}

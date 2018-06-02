@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using System;
+/// <summary>
+/// Represents the CPU Hand prefab. It's a collection of quads that accurately represents the number of cards tied to the hand.
+/// </summary>
 public class CPUHand
 {
     private GameObject hand = null;
     private List<Transform> cards = new List<Transform>();
     bool _isActive = false;
+    /// <summary>
+    /// Creates the Hand
+    /// </summary>
+    /// <param name="prefab">Prefab of hand</param>
+    /// <param name="transform">Where to instantiate hand</param>
     public CPUHand(GameObject prefab, Transform transform)
     {
         hand = GameObject.Instantiate(Deck.Instance().cpuHandPrefab, transform);
@@ -17,7 +25,7 @@ public class CPUHand
         }
 
         //The cards rotate outwards in a fan like fashion
-        //We want to sort by distance from center so we can go through the list in order and show the fan of cards symetrically
+        //We want to sort by distance from center so we can hide the cards from the outside in.
         cards = cards.OrderBy(card => Math.Abs(card.localPosition.x)).ToList();
     }
     ~CPUHand()
@@ -27,7 +35,10 @@ public class CPUHand
             GameObject.Destroy(hand);
         }
     }
-    public void hide()
+    /// <summary>
+    /// Hides the hand
+    /// </summary>
+    public void Hide()
     {
         if (hand != null)
         {
@@ -35,11 +46,19 @@ public class CPUHand
         }
         _isActive = false;
     }
-    public bool isActive()
+    /// <summary>
+    /// Shows if the hand is hidden
+    /// </summary>
+    /// <returns>If the hand is hidden</returns>
+    public bool IsActive()
     {
         return _isActive;
     }
-    public void show(int numberOfCards)
+    /// <summary>
+    /// Shows the Hand
+    /// </summary>
+    /// <param name="numberOfCards">The number of cards to show</param>
+    public void Show(int numberOfCards)
     {
         bool first = true;
         int count = 0;
@@ -64,6 +83,7 @@ public class CPUHand
             }
             else
             {
+                //We want to show the cards from the inside out, the list is already sorted as such
                 if (count < numberOfCards)
                 {
                     card.gameObject.SetActive(true);
@@ -91,7 +111,11 @@ public class ComputerPlayer : Player {
         humanPlayer.evtCardChosen += this.OnHumanCardChosen;
     }
 
-    public void OnHumanCardChosen(Player player)
+    /// <summary>
+    /// Called from the HumanPlayer evtCardChosen event
+    /// </summary>
+    /// <param name="player">The Player who chose the card</param>
+    private void OnHumanCardChosen(Player player)
     {
         //The CPUs wait a random amount of time to make it look like they're waiting
         //But if the human player has decided on a card already, don't keep them waiting
@@ -107,22 +131,26 @@ public class ComputerPlayer : Player {
         }
         if (handCards.Count > 1)
         {
-            cpuHand.show(handCards.Count);
+            cpuHand.Show(handCards.Count);
             //A bit of randomness to give it some character
             Invoke("CPUMadeChoice", UnityEngine.Random.Range(0.5f, 2.5f));
         }
         else
         {
+            //Don't even show the CPUHand object in this case, just instantiate the player card immediately
             OnCardPicked(handCards.First());
         }
     }
 
+    /// <summary>
+    /// Chooses a card randomly (TODO: proper AI)
+    /// </summary>
     private void CPUMadeChoice()
     {
         CancelInvoke();
-        if (cpuHand.isActive())
+        if (cpuHand.IsActive())
         {
-            cpuHand.hide();
+            cpuHand.Hide();
             int r = (int)UnityEngine.Random.Range(0.0f, handCards.Count - 1);
             cardToPlay = handCards[r];
             OnCardPicked(cardToPlay);

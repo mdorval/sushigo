@@ -9,7 +9,7 @@ public class PuddingScoreGroup: ScoreGroup {
         return card == CardType.Pudding;
     }
 
-    public override void CardPlayedOnGroup(CardType card)
+    public override void OnCardPlayedOnGroup(CardType card)
     {
         scoreCard.addToPuddings(1);
     }

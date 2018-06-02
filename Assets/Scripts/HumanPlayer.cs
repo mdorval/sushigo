@@ -25,6 +25,7 @@ public class HumanPlayer : Player
         {
             if (myenumerator.MoveNext())
             {
+                //Show this card 
                 if (!card.gameObject.activeInHierarchy)
                 {
                     card.gameObject.SetActive(true);
@@ -33,11 +34,16 @@ public class HumanPlayer : Player
             }
             else
             {
+                //Hide remaining cards
                 card.gameObject.SetActive(false);
             }
         }
     }
 
+    /// <summary>
+    /// Plays a card. Called by the UI
+    /// </summary>
+    /// <param name="card">Card to play</param>
     public void PlayCard(CardType card)
     {
         OnCardPicked(card);

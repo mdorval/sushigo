@@ -5,8 +5,10 @@ using UnityEngine.UI;
 using UnityEngine.U2D;
 using System.Linq;
 
+/// <summary>
+/// Manager for Sushi Go. Controls the global state of the game and the Deck of random cards
+/// </summary>
 public class Deck : MonoBehaviour {
-    private Dictionary<CardType, Texture2D> cardTextures = new Dictionary<CardType,Texture2D>();
     private CardType[] drawPile;
     private LinkedList<Player> players = new LinkedList<Player>();
     private ScoreCards scoreCards = new ScoreCards();
@@ -40,48 +42,51 @@ public class Deck : MonoBehaviour {
         }
         return instance;
     }
-
-    public bool PassingLeft()
-    {
-        return passLeft;
-    }
     void Start()
     {
         Populate();
         GetPlayers();
     }
 
-    private bool AllPlayersAtState(Player.PlayerState stateToCheck)
+    /// <summary>
+    /// Called whenever a Player's state changes. If every player is at the same waiting state, Deck triggers the next step
+    /// </summary>
+    /// <param name="player">The Player </param>
+    /// <param name="newState">The state the player was in</param>
+    private void OnPlayerStateChanged(Player player, Player.PlayerState newState)
     {
-        foreach(Player player in players)
+        foreach (Player playercheck in players)
         {
-            if (player.State() != stateToCheck)
+            if (playercheck.State() != newState)
             {
-                return false;
+                return;
             }
         }
-        return true;
-    }
-
-    public void OnPlayerStateChanged(Player player, Player.PlayerState newState)
-    {
-        if (!AllPlayersAtState(newState)) { return; }
-        switch(newState)
+        switch (newState)
         {
             case Player.PlayerState.WaitingToPlay:
-                PlayCards();
+                foreach (Player playerToPlay in players)
+                {
+                    playerToPlay.PlayCard();
+                }
                 break;
             case Player.PlayerState.WaitingToDraw:
                 UpdateText();
-                StartNextTurn();
+                foreach (Player playerToDraw in players)
+                {
+                    playerToDraw.DrawCardPack();
+                }
                 break;
             case Player.PlayerState.WaitingForNextRound:
-                UpdateText();
                 FinishRound();
                 break;
         }
     }
 
+    /// <summary>
+    /// Adds a ScoreCard for tracking to the Deck
+    /// </summary>
+    /// <param name="card">The Card To Add</param>
     public void AddScoreCard(ScoreCard card)
     {
         scoreCards.Add(card);
@@ -91,7 +96,14 @@ public class Deck : MonoBehaviour {
     delegate string valueString(ScoreCard card);
     delegate IEnumerable<ScoreCard> scoreCardSort(ScoreCards scoreCards);
     delegate int potentialPoints(ScoreCard card, ScoreCards cards);
-    void FillScorePanel(GameObject scorePanel,ScoreCards scoreCards, scoreCardSort sortFunction, valueString valueStringFunction,potentialPoints potentialPointsFunction = null)
+    /// <summary>
+    /// Fills a given score panel with Score information
+    /// </summary>
+    /// <param name="scorePanel">The Panel to Fill</param>
+    /// <param name="sortFunction">The function to sort the players by</param>
+    /// <param name="valueStringFunction">The function to show the value given the scorecard</param>
+    /// <param name="potentialPointsFunction">(Optional) The function to show the potential points for this rank</param>
+    void FillScorePanel(GameObject scorePanel, scoreCardSort sortFunction, valueString valueStringFunction,potentialPoints potentialPointsFunction = null)
     {
         var scorePanels = scorePanel.GetComponentsInChildren<Text>();
         int counter = 0;
@@ -119,24 +131,42 @@ public class Deck : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Updates the Score Text In The UI
+    /// </summary>
     void UpdateText()
     {
         scoreCards.UpdateRankScores();
         //ScoreCards
-        FillScorePanel(scorePanel, scoreCards, 
+        FillScorePanel(scorePanel,  
             scoreCards => scoreCards.SortByScore(),
             scoreCard => scoreCard.Score().ToString());
         //Puddings
-        FillScorePanel(puddingPanel, scoreCards,
+        FillScorePanel(puddingPanel, 
             scoreCards => scoreCards.SortByPudding(),
             scoreCard => scoreCard.Puddings().ToString(),
             (scoreCard,scoreCards) => scoreCards.PuddingScore(scoreCard));
         //Rolls
-        FillScorePanel(rollPanel, scoreCards,
+        FillScorePanel(rollPanel, 
             scoreCards => scoreCards.SortByRolls(),
             scoreCard => scoreCard.Rolls().ToString(),
             (scoreCard, scoreCards) => scoreCards.RollScore(scoreCard));
     }
+
+    /// <summary>
+    /// Whether this round players are passing left or right - alternates every round
+    /// </summary>
+    /// <returns>if we are passing left</returns>
+    public bool PassingLeft()
+    {
+        return passLeft;
+    }
+
+    /// <summary>
+    /// Gets the neighbor for the given player. Neighbor will be different dependent on round
+    /// </summary>
+    /// <param name="player">The Player to check the neighbor for</param>
+    /// <returns>The player's neighbor</returns>
     public Player GetNeighbor(Player player)
     {
         LinkedListNode<Player> node = players.Find(player);
@@ -150,6 +180,9 @@ public class Deck : MonoBehaviour {
         }
     }
     
+    /// <summary>
+    /// Initializes Deck with the players
+    /// </summary>
     void GetPlayers()
     {
         foreach (Player player in GetComponentsInChildren<Player>())
@@ -162,23 +195,29 @@ public class Deck : MonoBehaviour {
             player.DealHand(DrawHand(8));
         }
     }
+    /// <summary>
+    /// Finishes a given round
+    /// </summary>
     public void FinishRound()
     {
-        scoreCards.scoreRolls();
-        UpdateText();
+        scoreCards.ScoreRolls();
         if (roundNumber < 3)
         {
             continueDialog.ShowDialog("Round " + roundNumber + " complete!\n"+scoreCards.SortByScore().First().Name()+" In the lead", "Continue", StartNextRound);
         }
         else if (roundNumber == 3)
         {
-            scoreCards.scorePuddings();
+            scoreCards.ScorePuddings();
             continueDialog.ShowDialog("Game Complete!\n" + scoreCards.SortByScore().First().Name() + " Wins!","Play Again",Reset,"Exit",Application.Quit);
         }
+        UpdateText();
         roundNumber++;
         passLeft = !passLeft;
     }
 
+    /// <summary>
+    /// Resets the game 
+    /// </summary>
     public void Reset()
     {
         roundNumber = 1;
@@ -190,41 +229,29 @@ public class Deck : MonoBehaviour {
         }
         UpdateText();
     }
-
-    private void PlayCards()
-    {
-        foreach (Player player in players)
-        {
-            player.PlayCard();
-        }
-    }
-
-    public void StartNextTurn()
-    {
-        foreach (Player player in players)
-        {
-            player.DrawCardPack();
-        }
-    }
-
-    private void CleanUpRound()
+    
+    /// <summary>
+    /// Starts the next round of play
+    /// </summary>
+    public void StartNextRound()
     {
         foreach (Player player in players)
         {
             player.ClearCards(true);
+            player.scoreCard.ClearRolls();
+            UpdateText();
         }
-
-    }
-
-    public void StartNextRound()
-    {
-        CleanUpRound();
         foreach (Player player in players)
         {
             player.DealHand(DrawHand(8));
         }
     }
 
+    /// <summary>
+    /// Draws a hand of random cards remaining in the deck
+    /// </summary>
+    /// <param name="size">The number of cards to draw</param>
+    /// <returns>List of Cards</returns>
     private List<CardType> DrawHand(int size)
     {
         List<CardType> hand = new List<CardType>();
@@ -235,6 +262,9 @@ public class Deck : MonoBehaviour {
         return hand;
     }
 	
+    /// <summary>
+    /// Populates and Shuffles the Deck
+    /// </summary>
     void Populate()
     {
         //First count the number of cards
@@ -252,11 +282,6 @@ public class Deck : MonoBehaviour {
                 drawPile[++topCard] = cardinfo.type;
             }
         }
-        Shuffle();
-    }
-
-    void Shuffle()
-    {
         System.Random _random = new System.Random();
         for (int i = 0, n = topCard; i <= n; i++)
         {

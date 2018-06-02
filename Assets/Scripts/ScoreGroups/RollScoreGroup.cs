@@ -9,18 +9,18 @@ public class RollScoreGroup : ScoreGroup {
         return card == CardType.Roll_Double || card == CardType.Roll_Single || card == CardType.Roll_Triple;
     }
 
-    public override void CardPlayedOnGroup(CardType card)
+    public override void OnCardPlayedOnGroup(CardType card)
     {
         switch (card)
         {
             case CardType.Roll_Single:
-                scoreCard.addToRolls(1);
+                scoreCard.AddToRolls(1);
                 break;
             case CardType.Roll_Double:
-                scoreCard.addToRolls(2);
+                scoreCard.AddToRolls(2);
                 break;
             case CardType.Roll_Triple:
-                scoreCard.addToRolls(3);
+                scoreCard.AddToRolls(3);
                 break;
         }
     }

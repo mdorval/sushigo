@@ -9,11 +9,11 @@ public class DumplingScoreGroup : ScoreGroup {
         return card == CardType.Dumpling;
     }
 
-    public override void CardPlayedOnGroup(CardType card)
+    public override void OnCardPlayedOnGroup(CardType card)
     {
         if (cards.Count <= 5)
         {
-            scoreCard.addToScore(cards.Count);
+            scoreCard.AddToScore(cards.Count);
         }
     }
 }

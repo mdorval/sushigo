@@ -9,11 +9,11 @@ public class TempuraScoreGroup : ScoreGroup {
         return card == CardType.Tempura && cards.Count < 2;
     }
 
-    public override void CardPlayedOnGroup(CardType card)
+    public override void OnCardPlayedOnGroup(CardType card)
     {
         if (cards.Count == 2)
         {
-            scoreCard.addToScore(5);
+            scoreCard.AddToScore(5);
         }
     }
 }

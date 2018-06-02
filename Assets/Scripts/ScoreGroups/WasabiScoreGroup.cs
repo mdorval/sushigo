@@ -10,19 +10,19 @@ public class WasabiScoreGroup : ScoreGroup {
             && cards.Count < 2;
     }
 
-    public override void CardPlayedOnGroup(CardType card)
+    public override void OnCardPlayedOnGroup(CardType card)
     {
         //Ignore wasabi card points-wise
         switch (card)
         {
             case CardType.Nigiri_Egg:
-                scoreCard.addToScore(3);
+                scoreCard.AddToScore(3);
                 break;
             case CardType.Nigiri_Salmon:
-                scoreCard.addToScore(6);
+                scoreCard.AddToScore(6);
                 break;
             case CardType.Nigiri_Squid:
-                scoreCard.addToScore(9);
+                scoreCard.AddToScore(9);
                 break;
         }
     }

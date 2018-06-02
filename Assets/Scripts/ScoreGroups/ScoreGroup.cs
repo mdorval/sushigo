@@ -12,11 +12,25 @@ public abstract class ScoreGroup: MonoBehaviour {
     protected ScoreCard scoreCard;
     public Vector3 positionOfNextCard = new Vector3(0f, 0f, 0f);
     private static Vector3 nextCardDelta = new Vector3(0, 0.01f, -0.2f);
+    /// <summary>
+    /// Whether the card can be played on this group. 
+    /// Used by player to decide whether to use an existing score group or create a new scoregroup
+    /// </summary>
+    /// <param name="card">Card To Check</param>
+    /// <returns></returns>
     public abstract bool CanPlayOnGroup(CardType card);
-    public abstract void CardPlayedOnGroup(CardType card);
+    /// <summary>
+    /// Played when card is played on this group
+    /// </summary>
+    /// <param name="card">The type of card played</param>
+    public abstract void OnCardPlayedOnGroup(CardType card);
 
     public ScoreGroupEvent.CardPlayed evtCardPlayed = null;
 
+    /// <summary>
+    /// Sets the ScoreCard for this player
+    /// </summary>
+    /// <param name="myScoreCard">The ScoreCard</param>
     public void SetScoreCard(ScoreCard myScoreCard)
     {
         scoreCard = myScoreCard;
@@ -26,18 +40,27 @@ public abstract class ScoreGroup: MonoBehaviour {
     {
         Destroy(gameObject);
     }
+
+    /// <summary>
+    /// Gets a move request to place a card into place on this scoregroup
+    /// </summary>
+    /// <returns></returns>
     public MoveRequest GetNextCardMoveRequest()
     {
-        MoveRequest request = new MoveRequest(this.transform.TransformPoint(positionOfNextCard), this.gameObject, CardInPlace);
+        MoveRequest request = new MoveRequest(this.transform.TransformPoint(positionOfNextCard), this.gameObject, this.OnCardInPlace);
         positionOfNextCard += nextCardDelta;
         return request;
     }
-        
-    public void CardInPlace(GameObject obj)
+       
+    /// <summary>
+    /// Called when played
+    /// </summary>
+    /// <param name="obj">The card object that was played</param>
+    private void OnCardInPlace(GameObject obj)
     {
         PlayedCard card = obj.GetComponent<PlayedCard>();
         cards.Add(card.card);
-        CardPlayedOnGroup(card.card);
+        OnCardPlayedOnGroup(card.card);
         if (evtCardPlayed != null)
         {
             evtCardPlayed(card.card);

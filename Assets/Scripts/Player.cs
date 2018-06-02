@@ -12,16 +12,16 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
 {
     public enum PlayerState
     {
-        WaitingToDraw,
+        WaitingToDraw, //The player has no cards or current action
         //This transition handled by Deck
-        Drawing,
-        ChoosingCard,
-        Passing,
-        WaitingToPlay,
+        Drawing, //The deck is moving but hasn't reached the player's hand
+        ChoosingCard, //The player is choosing a card
+        Passing, //The deck has left the player's hand but hasn't reached the table
+        WaitingToPlay, //The player's deck is on the table and they are holding a card ready to be played
         //This transition handled by Deck
-        PlayingCard,
+        PlayingCard, //The playing card has left the hand but has not reached the table
         //This transition only happens if there's no cards left, handled by Deck
-        WaitingForNextRound,
+        WaitingForNextRound,//The player has no cards and did not pass a deck
         //This transition handled by Deck
     }
     protected List<CardType> handCards = new List<CardType>();
@@ -41,10 +41,18 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
     protected Vector3 distanceBetweenScoreGroup = new Vector3(0.7f, 0, 0);
 
     private PlayerState _state = PlayerState.WaitingToDraw;
+    /// <summary>
+    /// The state this player is in
+    /// </summary>
+    /// <returns>Playerstate</returns>
     public PlayerState State()
     {
         return _state;
     }
+    /// <summary>
+    /// Sets the State for this player
+    /// </summary>
+    /// <param name="newState">state to set</param>
     protected void SetNewState(PlayerState newState)
     {
         _state = newState;
@@ -54,18 +62,20 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
         }
     }
 
-    public int playerIndex = 0;
-
     public void Start()
     {
         scoreCard.SetUserName(playerName);
-        scoreCard.SetHtmlColor(textColor);
+        scoreCard.SetColor(textColor);
         Deck.Instance().AddScoreCard(scoreCard);
         Init();
     }
 
     public virtual void Init() { }
 
+    /// <summary>
+    /// Deals cards to hand
+    /// </summary>
+    /// <param name="dealthand">cards in hand</param>
     public void DealHand(List<CardType> dealthand)
     {
         handCards.AddRange(dealthand);
@@ -74,7 +84,7 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
 
     protected abstract void OnHandDealt();
 
-    public bool PassPack()
+    public bool PassCardPack()
     {
         SetNewState(PlayerState.Passing);
         if (handCards.Count == 0)
@@ -133,10 +143,14 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
     public void Reset()
     {
         ClearCards(false);
-        scoreCard.clear();
+        scoreCard.Clear();
         handCards.Clear();
     }
 
+    /// <summary>
+    /// Clears the Cards on the table readying for the next round
+    /// </summary>
+    /// <param name="savePuddings">whether to save the puddings (new round or new game?)</param>
     public void ClearCards(bool savePuddings)
     {
         foreach (ScoreGroup group in GetComponentsInChildren<ScoreGroup>())
@@ -152,6 +166,10 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
         }
     }
 
+    /// <summary>
+    /// Called when a card is picked by the player
+    /// </summary>
+    /// <param name="card">The Card picked</param>
     public void OnCardPicked(CardType card)
     {
         handCards.Remove(card);
@@ -181,9 +199,12 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
         playingCard.SetMoveRequest(foundGroup.GetNextCardMoveRequest());
         if (evtCardChosen != null)
             evtCardChosen(this);
-        PassPack();
+        PassCardPack();
     }
 
+    /// <summary>
+    /// Called by Deck when everyone is ready to Play cards
+    /// </summary>
     public void PlayCard()
     {
         SetNewState(PlayerState.PlayingCard);
@@ -191,6 +212,12 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
         playingCard = null;
     }
 
+    /// <summary>
+    /// Creates a new Scoregroup for the given card
+    /// </summary>
+    /// <param name="card">The Card for the new scoregroup</param>
+    /// <param name="localPosition">The position for the new scoreGroup</param>
+    /// <returns>The new Scoregroup</returns>
     protected ScoreGroup CreateNewScoreGroupForCard(CardType card,Vector3 localPosition)
     {
         GameObject gameobj = new GameObject("ScoreGroup");
@@ -229,11 +256,16 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
                 break;
         }
         ScoreGroup group = gameobj.GetComponent<ScoreGroup>();
+        //Add our scorecard to the group
         group.SetScoreCard(scoreCard);
+        //Connect our eventListener to the scoregroup
         group.evtCardPlayed += this.OnCardPlayed;
         return group;
     }
-
+    /// <summary>
+    /// Called when the card hits the scoregroup
+    /// </summary>
+    /// <param name="card"></param>
     public void OnCardPlayed(CardType card)
     {
         if (!endOfRound)

@@ -16,6 +16,7 @@ public class RulesCardsManager : MonoBehaviour {
     int page = 0;
 
     void Start () {
+        //Card panels are controlled by the DeckInfo
         foreach(CardInfo info in info.cards)
         {
             if (info.rulesPageText != "")
@@ -28,6 +29,9 @@ public class RulesCardsManager : MonoBehaviour {
         Init();
 	}
 
+    /// <summary>
+    /// Resets this to page one
+    /// </summary>
     public void Reset()
     {
         if (page != 0)
@@ -37,6 +41,9 @@ public class RulesCardsManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Loads the current page's information
+    /// </summary>
     void Init()
     {
         var cardsToShow = page == 0 ? cardsWithDescription.Take(3).ToArray() : cardsWithDescription.Skip(page*3).Take(3).ToArray();
@@ -57,7 +64,7 @@ public class RulesCardsManager : MonoBehaviour {
                 displaySprites[i].sprite = info.byType(cardsToShow[i]).cardSprite;
             }
         }
-        //If there's another page after this one, enable the next button.
+        //If there's another page after this one, enable the next button. (previous button always enabled)
         if ( ((page+1) * 3) >= cardsWithDescription.Count())
         {
             nextButton.gameObject.SetActive(false);
@@ -67,11 +74,15 @@ public class RulesCardsManager : MonoBehaviour {
             nextButton.gameObject.SetActive(true);
         }
     }
-    
+
+    /// <summary>
+    /// Loads the Previous Page
+    /// </summary>
     void PreviousPage()
     {
         if (page == 0)
         {
+            //Page before this is a whole different panel
             this.gameObject.SetActive(false);
             manager.LoadRulesPanel();
         }
@@ -82,6 +93,9 @@ public class RulesCardsManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Loads the Next Page
+    /// </summary>
     void NextPage()
     {
         //Next button hides if the next page not valid, so no error-checking here
@@ -89,9 +103,4 @@ public class RulesCardsManager : MonoBehaviour {
         Init();
     }
 
-
-    // Update is called once per frame
-    void Update () {
-		
-	}
 }

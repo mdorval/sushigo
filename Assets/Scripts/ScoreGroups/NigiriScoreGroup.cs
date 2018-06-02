@@ -11,18 +11,18 @@ public class NigiriScoreGroup : ScoreGroup {
         return false;
     }
 
-    public override void CardPlayedOnGroup(CardType card)
+    public override void OnCardPlayedOnGroup(CardType card)
     {
         switch (card)
         {
             case CardType.Nigiri_Egg:
-                scoreCard.addToScore(1);
+                scoreCard.AddToScore(1);
                 break;
             case CardType.Nigiri_Salmon:
-                scoreCard.addToScore(2);
+                scoreCard.AddToScore(2);
                 break;
             case CardType.Nigiri_Squid:
-                scoreCard.addToScore(3);
+                scoreCard.AddToScore(3);
                 break;
         }
     }

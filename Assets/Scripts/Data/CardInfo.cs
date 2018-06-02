@@ -24,4 +24,5 @@ public class CardInfo  {
         }
         return texture;
     }
+    public Color particleColor;
 }

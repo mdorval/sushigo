@@ -32,6 +32,7 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
     private CardPack cardPack = null;
     private bool endOfRound = false;
     private PlayedCard playingCard = null;
+    public ParticleSystem cardPlayParticleSystem = null;
     public PlayerEvent.StateChanged evtStateChanged = null;
     public PlayerEvent.CardChosen evtCardChosen = null;
 
@@ -258,6 +259,11 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
         ScoreGroup group = gameobj.GetComponent<ScoreGroup>();
         //Add our scorecard to the group
         group.SetScoreCard(scoreCard);
+        //Add particle system if exists
+        if (cardPlayParticleSystem != null)
+        {
+            group.SetParticleSystem(cardPlayParticleSystem);
+        }
         //Connect our eventListener to the scoregroup
         group.evtCardPlayed += this.OnCardPlayed;
         return group;

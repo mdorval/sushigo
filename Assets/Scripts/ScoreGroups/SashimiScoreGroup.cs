@@ -12,7 +12,8 @@ public class SashimiScoreGroup : ScoreGroup {
     {
         if (cards.Count == 3)
         {
-            scoreCard.AddToScore(5);
+            scoreCard.AddToScore(10);
+            EmitParticles(10,card);
         }
     }
 }

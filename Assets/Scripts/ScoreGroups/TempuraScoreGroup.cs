@@ -14,6 +14,7 @@ public class TempuraScoreGroup : ScoreGroup {
         if (cards.Count == 2)
         {
             scoreCard.AddToScore(5);
+            EmitParticles(5,card);
         }
     }
 }

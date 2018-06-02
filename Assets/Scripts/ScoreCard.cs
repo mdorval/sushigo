@@ -205,7 +205,7 @@ public class ScoreCard
     /// Adds to the pudding count
     /// </summary>
     /// <param name="puddingCount">pudding</param>
-    public void addToPuddings(int puddingCount)
+    public void AddToPuddings(int puddingCount)
     {
         _puddings += puddingCount;
     }

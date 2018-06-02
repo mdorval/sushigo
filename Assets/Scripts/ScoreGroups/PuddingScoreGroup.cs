@@ -11,6 +11,7 @@ public class PuddingScoreGroup: ScoreGroup {
 
     public override void OnCardPlayedOnGroup(CardType card)
     {
-        scoreCard.addToPuddings(1);
+        scoreCard.AddToPuddings(1);
+        EmitParticles(2,card);
     }
 }

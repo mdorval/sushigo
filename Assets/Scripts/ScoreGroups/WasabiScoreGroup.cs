@@ -12,17 +12,20 @@ public class WasabiScoreGroup : ScoreGroup {
 
     public override void OnCardPlayedOnGroup(CardType card)
     {
-        //Ignore wasabi card points-wise
+        //Ignore wasabi card points-wise and particle-wise
         switch (card)
         {
             case CardType.Nigiri_Egg:
                 scoreCard.AddToScore(3);
+                EmitParticles(3,card);
                 break;
             case CardType.Nigiri_Salmon:
                 scoreCard.AddToScore(6);
+                EmitParticles(6,card);
                 break;
             case CardType.Nigiri_Squid:
                 scoreCard.AddToScore(9);
+                EmitParticles(9,card);
                 break;
         }
     }

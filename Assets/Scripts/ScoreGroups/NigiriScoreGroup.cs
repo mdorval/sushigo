@@ -17,12 +17,15 @@ public class NigiriScoreGroup : ScoreGroup {
         {
             case CardType.Nigiri_Egg:
                 scoreCard.AddToScore(1);
+                EmitParticles(1,card);
                 break;
             case CardType.Nigiri_Salmon:
                 scoreCard.AddToScore(2);
+                EmitParticles(2,card);
                 break;
             case CardType.Nigiri_Squid:
                 scoreCard.AddToScore(3);
+                EmitParticles(3,card);
                 break;
         }
     }

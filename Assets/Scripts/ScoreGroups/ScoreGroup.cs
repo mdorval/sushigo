@@ -10,6 +10,8 @@ namespace ScoreGroupEvent
 public abstract class ScoreGroup: MonoBehaviour {
     protected List<CardType> cards = new List<CardType>();
     protected ScoreCard scoreCard;
+    protected ParticleSystem cardPlayParticleSystem = null;
+    private ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
     public Vector3 positionOfNextCard = new Vector3(0f, 0f, 0f);
     private static Vector3 nextCardDelta = new Vector3(0, 0.01f, -0.2f);
     /// <summary>
@@ -26,6 +28,15 @@ public abstract class ScoreGroup: MonoBehaviour {
     public abstract void OnCardPlayedOnGroup(CardType card);
 
     public ScoreGroupEvent.CardPlayed evtCardPlayed = null;
+
+    /// <summary>
+    /// Sets the particle system to use
+    /// </summary>
+    /// <param name="system">Particle system</param>
+    public void SetParticleSystem(ParticleSystem system)
+    {
+        cardPlayParticleSystem = system;
+    }
 
     /// <summary>
     /// Sets the ScoreCard for this player
@@ -51,7 +62,17 @@ public abstract class ScoreGroup: MonoBehaviour {
         positionOfNextCard += nextCardDelta;
         return request;
     }
-       
+
+    protected void EmitParticles(int intensity,CardType card)
+    {
+        if (cardPlayParticleSystem != null)
+        {
+            ParticleSystem.MainModule settings = cardPlayParticleSystem.main;
+            settings.startColor = Deck.Instance().deckInfo.byType(card).particleColor;
+            cardPlayParticleSystem.Emit(intensity*3);
+        }
+    }
+
     /// <summary>
     /// Called when played
     /// </summary>
@@ -60,6 +81,10 @@ public abstract class ScoreGroup: MonoBehaviour {
     {
         PlayedCard card = obj.GetComponent<PlayedCard>();
         cards.Add(card.card);
+        if (cardPlayParticleSystem != null)
+        {
+            cardPlayParticleSystem.transform.position = obj.transform.position;
+        }
         OnCardPlayedOnGroup(card.card);
         if (evtCardPlayed != null)
         {

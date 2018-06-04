@@ -120,7 +120,7 @@ MonoBehaviour:
       -6 points. '
     particleColor: {r: 0.8980393, g: 0.7058824, b: 0.7176471, a: 1}
   - type: 12
-    copiesInDeck: 4
+    copiesInDeck: 0
     cardSprite: {fileID: 21300010, guid: a7bd9bb00b2e8c04492e696a5d0732b9, type: 3}
     tooltipText: In a future turn you can trade your chopsticks in for the ability
       to select two cards from your hand

@@ -4,10 +4,7 @@ using UnityEngine;
 
 public class HumanPlayer : Player
 {
-    List<PlayedCard> playedCards;
     public GameObject hand;
-    public GameObject cardPrefab;
-    public GameObject playingCardPrefab;
     private List<HandCard> cards = new List<HandCard>();
     public override void Init()
     {

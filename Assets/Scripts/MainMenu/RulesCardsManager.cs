@@ -19,7 +19,7 @@ public class RulesCardsManager : MonoBehaviour {
         //Card panels are controlled by the DeckInfo
         foreach(CardInfo info in info.cards)
         {
-            if (info.rulesPageText != "")
+            if (info.rulesPageText != "" && info.copiesInDeck > 0)
             {
                 cardsWithDescription.Add(info.type);
             }

@@ -24,7 +24,6 @@ public class Deck : MonoBehaviour {
     public GameObject puddingPanel;
 
     public DeckInfo deckInfo;
-    public Text scoreText;
     public ContinueDialog continueDialog;
 
     private bool passLeft = true;

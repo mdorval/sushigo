@@ -101,14 +101,15 @@ public class CPUHand
 }
 
 public class ComputerPlayer : Player {
-    //private CardType cardtoplay = CardType.Null;
     private CPUHand cpuHand = null;
+    private BaseAI ai = null;
 
     public override void Init()
     {
         //subscribe to the human player
         HumanPlayer humanPlayer = FindObjectOfType<HumanPlayer>();
         humanPlayer.evtCardChosen += this.OnHumanCardChosen;
+        ai = new NormalAI(this);
     }
 
     /// <summary>
@@ -151,8 +152,7 @@ public class ComputerPlayer : Player {
         if (cpuHand.IsActive())
         {
             cpuHand.Hide();
-            int r = (int)UnityEngine.Random.Range(0.0f, handCards.Count - 1);
-            cardToPlay = handCards[r];
+            cardToPlay = ai.chooseCard(handCards);
             OnCardPicked(cardToPlay);
         }
     }

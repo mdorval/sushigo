@@ -6,6 +6,7 @@ namespace PlayerEvent
 {
     public delegate void CardChosen(Player myPlayer); //used to speed up AI if taking too long
     public delegate void StateChanged(Player myPlayer, Player.PlayerState stateToCheck);
+    public delegate void CardPlayed(Player myPlayer, CardType cardPlayed);
 }
 
 public abstract class Player : MonoBehaviour //, IListensPlayedCard
@@ -35,6 +36,7 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
     public ParticleSystem cardPlayParticleSystem = null;
     public PlayerEvent.StateChanged evtStateChanged = null;
     public PlayerEvent.CardChosen evtCardChosen = null;
+    public PlayerEvent.CardPlayed evtCardPlayed = null;
 
     //public EventStateChanged evStateChanged = null;
     protected CardType cardToPlay = CardType.Null;
@@ -85,6 +87,10 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
 
     protected abstract void OnHandDealt();
 
+    /// <summary>
+    /// Starts the pass of the pack
+    /// </summary>
+    /// <returns>If there was cards left to pass</returns>
     public bool PassCardPack()
     {
         SetNewState(PlayerState.Passing);
@@ -119,12 +125,19 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
         return true;
     }
 
+    /// <summary>
+    /// Called when a card pack is finished passing (when it hits the table)
+    /// </summary>
+    /// <param name="gameObject">cardPack</param>
     public void OnCardPackPassed(GameObject gameObject)
     {
         cardPack = null;
         SetNewState(PlayerState.WaitingToPlay);
     }
 
+    /// <summary>
+    /// Starts drawing the next turn's card pack from the table
+    /// </summary>
     public void DrawCardPack()
     {
         SetNewState(PlayerState.Drawing);
@@ -133,6 +146,10 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
         cardPack.SetMoveRequest(request);
     }
 
+    /// <summary>
+    /// Called when the card pack has reached the player's hand
+    /// </summary>
+    /// <param name="gameobject">cardPack</param>
     public void OnCardPackDrawn(GameObject gameobject)
     {
         cardPack = gameobject.GetComponent<CardPack>();
@@ -141,6 +158,9 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
         DealHand(cardPack.Cards());
     }
 
+    /// <summary>
+    /// Resets the game
+    /// </summary>
     public void Reset()
     {
         ClearCards(false);
@@ -274,6 +294,10 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
     /// <param name="card"></param>
     public void OnCardPlayed(CardType card)
     {
+        if (evtCardPlayed != null)
+        {
+            evtCardPlayed(this, card);
+        }
         if (!endOfRound)
         {
             SetNewState(PlayerState.WaitingToDraw);

@@ -6,13 +6,12 @@ using UnityEngine.U2D;
 using System.Linq;
 
 /// <summary>
-/// Manager for Sushi Go. Controls the global state of the game and the Deck of random cards
+/// Manager for Sushi Go. Controls the global state of the game
 /// </summary>
 public class Deck : MonoBehaviour {
-    private CardType[] drawPile;
+    private DrawPile drawPile;
     private LinkedList<Player> players = new LinkedList<Player>();
-    private ScoreCards scoreCards = new ScoreCards();
-    private int topCard = -1;
+    private List<ScoreCard> scoreCards = new List<ScoreCard>();
     private int roundNumber = 1;
 
     public GameObject playingCardPrefab;
@@ -29,6 +28,11 @@ public class Deck : MonoBehaviour {
     private bool passLeft = true;
 
     private static Deck instance = null;
+
+    /// <summary>
+    /// Gets the current instance of the deck
+    /// </summary>
+    /// <returns>Deck</returns>
     public static Deck Instance()
     {
         if (instance == null)
@@ -41,10 +45,51 @@ public class Deck : MonoBehaviour {
         }
         return instance;
     }
+
+    /// <summary>
+    /// Starts the game
+    /// </summary>
     void Start()
     {
-        Populate();
-        GetPlayers();
+        drawPile = new DrawPile(deckInfo);
+        InitPlayers();
+    }
+
+    /// <summary>
+    /// Called whenever one of this Deck's Players plays a card
+    /// Subscribe to this event to hear all of the CardPlayed events for all children
+    /// </summary>
+    public PlayerEvent.CardPlayed evtCardPlayed = null;
+
+    /// <summary>
+    /// This hooks up to all of the players evtCardPlayed events and echos them all
+    /// </summary>
+    /// <param name="player">Player who played card</param>
+    /// <param name="card">Card played</param>
+    private void OnPlayerCardPlayed(Player player, CardType card)
+    {
+        if (evtCardPlayed != null)
+        {
+            evtCardPlayed(player, card);
+        }
+    }
+
+    /// <summary>
+    /// This returns readonly versions of the scorecards, not including the passed-in player
+    /// This allows a predictor to calculate the potential value of something based on this round's
+    /// current scores
+    /// </summary>
+    /// <param name="mainPlayer">Player to ignore</param>
+    /// <returns>List of ReadOnly ScoreCards</returns>
+    public IEnumerable<IRankScorer> GetOpponentPredictorScorers(Player mainPlayer)
+    {
+        List<IRankScorer> scorers = new List<IRankScorer>();
+        foreach (Player player in players)
+        {
+            if (player == mainPlayer) continue;
+            scorers.Add(player.scoreCard.GetRankScorer());
+        }
+        return scorers;
     }
 
     /// <summary>
@@ -93,8 +138,8 @@ public class Deck : MonoBehaviour {
     }
 
     delegate string valueString(ScoreCard card);
-    delegate IEnumerable<ScoreCard> scoreCardSort(ScoreCards scoreCards);
-    delegate int potentialPoints(ScoreCard card, ScoreCards cards);
+    delegate IEnumerable<ScoreCard> scoreCardSort(List<ScoreCard> scoreCards);
+    delegate int potentialPoints(ScoreCard card);
     /// <summary>
     /// Fills a given score panel with Score information
     /// </summary>
@@ -116,7 +161,7 @@ public class Deck : MonoBehaviour {
             tscore.text = valueStringFunction(scoreCard);
             if(potentialPointsFunction != null)
             {
-                int value = potentialPointsFunction(scoreCard,scoreCards);
+                int value = potentialPointsFunction(scoreCard);
                 //ignore value == 0
                 if (value > 0)
                 {
@@ -135,21 +180,22 @@ public class Deck : MonoBehaviour {
     /// </summary>
     void UpdateText()
     {
-        scoreCards.UpdateRankScores();
+        scoreCards.UpdateRollScores();
+        scoreCards.UpdatePuddingScores();
         //ScoreCards
         FillScorePanel(scorePanel,  
-            scoreCards => scoreCards.SortByScore(),
+            scoreCards => scoreCards.SortByScoreAndName(),
             scoreCard => scoreCard.Score().ToString());
         //Puddings
         FillScorePanel(puddingPanel, 
-            scoreCards => scoreCards.SortByPudding(),
+            scoreCards => scoreCards.SortByPudding().ThenBy(r => r.Name()),
             scoreCard => scoreCard.Puddings().ToString(),
-            (scoreCard,scoreCards) => scoreCards.PuddingScore(scoreCard));
+            scoreCard => scoreCard.GetPuddingPotentialScore());
         //Rolls
         FillScorePanel(rollPanel, 
-            scoreCards => scoreCards.SortByRolls(),
+            scoreCards => scoreCards.SortByRolls().ThenBy(r => r.Name()),
             scoreCard => scoreCard.Rolls().ToString(),
-            (scoreCard, scoreCards) => scoreCards.RollScore(scoreCard));
+            scoreCard => scoreCard.GetRollsPotentialScore());
     }
 
     /// <summary>
@@ -178,20 +224,39 @@ public class Deck : MonoBehaviour {
             return (node.Next != null) ? node.Next.Value : players.First.Value;
         }
     }
-    
+
+    /// <summary>
+    /// Calculates how many turns it takes for playerA's deck to get to playerB
+    /// </summary>
+    /// <param name="playerA">The first player</param>
+    /// <param name="playerB">The player we want to calculate towards</param>
+    /// <returns></returns>
+    public int CalculatePacksBetween(Player playerA, Player playerB)
+    {
+        int count = 0;
+        Player playerSearch = playerA;
+        do
+        {
+            playerSearch = GetNeighbor(playerSearch);
+            count++;
+        } while (playerSearch != playerB);
+        return count;
+    }
+
     /// <summary>
     /// Initializes Deck with the players
     /// </summary>
-    void GetPlayers()
+    void InitPlayers()
     {
         foreach (Player player in GetComponentsInChildren<Player>())
         {
             players.AddLast(player);
             player.evtStateChanged += OnPlayerStateChanged;
+            player.evtCardPlayed += OnPlayerCardPlayed;
         }
         foreach (Player player in GetComponentsInChildren<Player>())
         {
-            player.DealHand(DrawHand(8));
+            player.DealHand(drawPile.DrawHand(8));
         }
     }
     /// <summary>
@@ -199,15 +264,21 @@ public class Deck : MonoBehaviour {
     /// </summary>
     public void FinishRound()
     {
-        scoreCards.ScoreRolls();
+        foreach (ScoreCard card in scoreCards)
+        {
+            card.ScoreRolls();
+        }
         if (roundNumber < 3)
         {
-            continueDialog.ShowDialog("Round " + roundNumber + " complete!\n"+scoreCards.SortByScore().First().Name()+" In the lead", "Continue", StartNextRound);
+            continueDialog.ShowDialog("Round " + roundNumber + " complete!\n"+scoreCards.SortByScoreAndName().First().Name()+" In the lead", "Continue", StartNextRound);
         }
         else if (roundNumber == 3)
         {
-            scoreCards.ScorePuddings();
-            continueDialog.ShowDialog("Game Complete!\n" + scoreCards.SortByScore().First().Name() + " Wins!","Play Again",Reset,"Exit",Application.Quit);
+            foreach (ScoreCard card in scoreCards)
+            {
+                card.ScorePuddings();
+            }
+            continueDialog.ShowDialog("Game Complete!\n" + scoreCards.SortByScoreAndName().First().Name() + " Wins!","Play Again",Reset,"Exit",Application.Quit);
         }
         UpdateText();
         roundNumber++;
@@ -220,11 +291,11 @@ public class Deck : MonoBehaviour {
     public void Reset()
     {
         roundNumber = 1;
-        Populate();
+        drawPile.Populate();
         foreach (Player player in players)
         {
             player.Reset();
-            player.DealHand(DrawHand(8));
+            player.DealHand(drawPile.DrawHand(8));
         }
         UpdateText();
     }
@@ -242,52 +313,7 @@ public class Deck : MonoBehaviour {
         }
         foreach (Player player in players)
         {
-            player.DealHand(DrawHand(8));
-        }
-    }
-
-    /// <summary>
-    /// Draws a hand of random cards remaining in the deck
-    /// </summary>
-    /// <param name="size">The number of cards to draw</param>
-    /// <returns>List of Cards</returns>
-    private List<CardType> DrawHand(int size)
-    {
-        List<CardType> hand = new List<CardType>();
-        for (int i=0;i<size;i++)
-        {
-            hand.Add(drawPile[topCard--]);
-        }
-        return hand;
-    }
-	
-    /// <summary>
-    /// Populates and Shuffles the Deck
-    /// </summary>
-    void Populate()
-    {
-        //First count the number of cards
-        int count = 0;
-        topCard = -1;
-        foreach (CardInfo cardInfo in deckInfo.cards)
-        {
-            count += cardInfo.copiesInDeck;
-        }
-        drawPile = new CardType[count];
-        foreach (CardInfo cardinfo in deckInfo.cards)
-        {
-            for(int i=0;i<cardinfo.copiesInDeck;i++)
-            {
-                drawPile[++topCard] = cardinfo.type;
-            }
-        }
-        System.Random _random = new System.Random();
-        for (int i = 0, n = topCard; i <= n; i++)
-        {
-            int r = i + (int)(_random.NextDouble() * (n - i));
-            CardType temp = drawPile[r];
-            drawPile[r] = drawPile[i];
-            drawPile[i] = temp;
+            player.DealHand(drawPile.DrawHand(8));
         }
     }
 }

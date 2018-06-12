@@ -7,11 +7,11 @@ namespace ScoreGroupEvent
     public delegate void CardPlayed(CardType cardType);
 }
 
-public abstract class ScoreGroup: MonoBehaviour {
+public abstract class ScoreGroup: MonoBehaviour
+{
     protected List<CardType> cards = new List<CardType>();
     protected ScoreCard scoreCard;
     protected ParticleSystem cardPlayParticleSystem = null;
-    private ParticleSystem.EmitParams emitParams = new ParticleSystem.EmitParams();
     public Vector3 positionOfNextCard = new Vector3(0f, 0f, 0f);
     private static Vector3 nextCardDelta = new Vector3(0, 0.01f, -0.2f);
     /// <summary>
@@ -61,6 +61,11 @@ public abstract class ScoreGroup: MonoBehaviour {
         MoveRequest request = new MoveRequest(this.transform.TransformPoint(positionOfNextCard), this.gameObject, this.OnCardInPlace);
         positionOfNextCard += nextCardDelta;
         return request;
+    }
+
+    public int CardCount()
+    {
+        return cards.Count;
     }
 
     protected void EmitParticles(int intensity,CardType card)

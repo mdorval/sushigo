@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine;
 /// For any unknown packs we keep our own draw pile to guess what we think is in those packs
 /// And make a calculation based on that
 /// </summary>
-class CardCounter
+class CardCounter: IDisposable
 {
     DrawPile pile = null;
     private List<CardType>[] packs;
@@ -134,5 +135,10 @@ class CardCounter
                 Debug.LogError("Prediction incorrect "+ thispack.Count + cards.Count);
             }
         }
+    }
+
+    public void Dispose()
+    {
+        Deck.Instance().evtCardPlayed -= this.OnPlayerCardPlayed;
     }
 }

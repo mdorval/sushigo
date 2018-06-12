@@ -24,7 +24,6 @@ public class MoveRequest
         _callback = callback;
         _speed = speed;
     }
-    ~MoveRequest() { }
     Vector3 _destination;
     MoveCompleteCallback _callback;
     GameObject _moveParent;

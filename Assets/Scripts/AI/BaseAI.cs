@@ -1,8 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseAI {
+public abstract class BaseAI: IDisposable {
     /// <summary>
     /// Creates a New AI
     /// </summary>
@@ -11,7 +12,6 @@ public abstract class BaseAI {
     {
         _player = ourPlayer;
     }
-    ~BaseAI () { }
 
     protected ComputerPlayer _player;
     protected LinkedList<Player> _otherPlayers;
@@ -20,5 +20,6 @@ public abstract class BaseAI {
     /// </summary>
     /// <param name="pack">A Pack of Cards</param>
     /// <returns>A specific card to play</returns>
-    public abstract CardType chooseCard(List<CardType> pack);
+    public abstract CardType ChooseCard(List<CardType> pack);
+    public abstract void Dispose();
 }

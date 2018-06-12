@@ -161,7 +161,7 @@ public abstract class Player : MonoBehaviour //, IListensPlayedCard
     /// <summary>
     /// Resets the game
     /// </summary>
-    public void Reset()
+    public virtual void Reset()
     {
         ClearCards(false);
         scoreCard.Clear();

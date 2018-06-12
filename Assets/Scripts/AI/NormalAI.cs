@@ -2,16 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
-public class NormalAI : BaseAI
+public class NormalAI : BaseAI, IDisposable
 {
-    public NormalAI(ComputerPlayer ourPlayer) : base(ourPlayer)
+    public NormalAI(ComputerPlayer ourPlayer) : base(ourPlayer) 
     {
         counter = new CardCounter(ourPlayer);
     }
 
     private CardCounter counter = null;
-    public override CardType chooseCard(List<CardType> pack)
+    public override CardType ChooseCard(List<CardType> pack)
     {
         counter.InitPack(pack);
         Dictionary<CardType, float> valuePerCardType = new Dictionary<CardType, float>();
@@ -33,7 +34,7 @@ public class NormalAI : BaseAI
         //Grab the top values. There could be more than one card type here
         var topValues = valuePerCardType.GroupBy(r=>r.Value).OrderByDescending(r=>r.Key).First().ToList();
         //randomly select a card type from the top values
-        return topValues.ElementAt(Random.Range(0, topValues.Count)).Key;
+        return topValues.ElementAt(UnityEngine.Random.Range(0, topValues.Count)).Key;
     }
 
     /// <summary>
@@ -83,7 +84,7 @@ public class NormalAI : BaseAI
                     //calculate the new potential scores
                     scorers.UpdateRollScores();
                     float value = scorer.GetRollsPotentialScore() - oldRollsScore;
-                    if (Random.Range(0,1.0f) > 0.5f)
+                    if (UnityEngine.Random.Range(0,1.0f) > 0.5f)
                     {
                         //account for multiple people playing rolls on the same turn
                         //without this the AI would always play rolls on the first turn
@@ -202,4 +203,8 @@ public class NormalAI : BaseAI
         }
     }
 
+    public override void Dispose()
+    {
+        counter.Dispose();
+    }
 }

@@ -33,6 +33,7 @@ class DrawPile
         {
             _count += cardInfo.copiesInDeck;
         }
+        _topCard = -1;
         _cards = new CardType[_count];
         foreach (CardInfo cardinfo in _info.cards)
         {
